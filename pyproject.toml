@@ -1,0 +1,20 @@
+[project]
+name = "Fly-in"
+version = "1.0.0"
+description = "42 project Fly-in"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mypy>=2.3.0",
+    "arcade>=3.3.3",
+]
+authors = [
+    {name = "npillet"}
+]
+license = "MIT"
+
+[dependency-groups]
+dev = [
+    "flake8>=7.3.0",
+    "mypy>=1.19.1",
+]
