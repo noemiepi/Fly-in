@@ -2,8 +2,10 @@ import re
 import sys
 import glob
 
-end = "\033[0m"
+from typing import Any
+
 r = "\033[31m\033[5m\033[1m"
+end = "\033[0m"
 
 
 class MapParser():
@@ -11,12 +13,14 @@ class MapParser():
     This class will parse every map file present in the maps subfolders.
 
     Attributes:
-      - is_valid(self, data: str) -> bool
+      - parse_file(self) -> tuple[bool, dict[str, list[Any]]]
+      - is_valid(self, file: str) -> tuple[bool, list[Any]]
     """
     def __init__(self) -> None:
         try:
             # Reunites every files in maps folder
-            self.filelist = glob.glob("data/maps/**/*.txt", recursive=True)
+            self.filelist: list[str] = glob.glob("data/maps/**/*.txt",
+                                                 recursive=True)
 
         except PermissionError:
             raise ValueError
@@ -24,37 +28,57 @@ class MapParser():
         except FileNotFoundError:
             raise ValueError
 
-    def parse_file(self) -> bool:
+    def parse_file(self) -> tuple[bool, dict[str, list[Any]]]:
         """
         Parse every map files.
 
         Return
-            -> bool
+            -> tuple[bool, dict[str, list[Any]]]
         """
+        maps_dict: dict[str, list[Any]] = {}
+        hub_list: list[Any] = []
+
+        path: list[str] = []
+        name: str = ""
+
+        valid: bool = False
+
         # Checks every file one by one
         for file in self.filelist:
-            if (self.is_valid(file) is False):
+            valid, hub_list = self.is_valid(file)
+
+            if (valid is False):
                 return False
 
-        return True
+            # Adds the map's informations in a dictionary with the map's name
+            path = file.split("/")
+            name = path[3]
+            maps_dict.update({name: hub_list})
 
-    def is_valid(self, file: str) -> bool:
+        return (True, maps_dict)
+
+    def is_valid(self, file: str) -> tuple[bool, list[Any]]:
         """
         Checks if the file has the correct configuration
         for the steps definitions and the drones.
 
         Parameter:
-          - data: str
+          - file: str
 
         Return
-          -> bool
+          -> tuple[bool, list[Any]]
         """
+        hub_list: list[Any] = []
         keyword: list[str] = ["nb_drones", "start_hub", "end_hub",
                               "hub", "connection"]
 
         first: bool = True
         start_hub: int = 0
         end_hub: int = 0
+
+        zone: str = ""
+        color: str | None = ""
+        nb_drone: int = 0
 
         try:
             with open(file, "r") as f:
@@ -67,6 +91,7 @@ class MapParser():
 
                     key, value = line.split(":", 1)
                     key = key.strip()
+                    value = value.strip()
 
                     # Checks if the correct keywords are used
                     if key not in keyword:
@@ -78,10 +103,27 @@ class MapParser():
                             raise ValueError(f"{r}[ERROR]{end}: Number "
                                              "of drones isn't the first "
                                              f"parameter (l.{i})")
+
+                        try:
+                            nb_drone = int(value)
+
+                        except ValueError:
+                            raise ValueError(f"{r}[ERROR]{end}: "
+                                                "Invalid drone "
+                                                "number. It should "
+                                                "be an integers"
+                                                f"(l.{i})")
+
+                        if nb_drone <= 0:
+                            raise ValueError(f"{r}[ERROR]{end}: "
+                                                "Invalid number of "
+                                                "drones (Needs to be"
+                                                f" above 0) (l.{i})")
+
+                        hub_list.append(nb_drone)
                         first = False
 
                     # Checks the steps and their validity
-                    value = value.strip()
                     if key in ["start_hub", "end_hub", "hub"]:
                         if key == "start_hub":
                             start_hub += 1
@@ -118,7 +160,7 @@ class MapParser():
                         if metadata:
                             meta_name = metadata[0].split()
                             for meta in meta_name:
-                                meta_keyword = meta.split("=")[0]
+                                meta_keyword: str = meta.split("=")[0]
                                 if meta_keyword not in ["zone", "color",
                                                         "max_drones"]:
                                     raise ValueError(f"{r}[ERROR]{end}: "
@@ -126,7 +168,7 @@ class MapParser():
                                                      "for the metadata "
                                                      f"(l.{i})")
 
-                                meta_value = meta.split("=")[1]
+                                meta_value: str = meta.split("=")[1]
                                 meta_value = meta_value.strip()
                                 if meta_keyword == "zone":
                                     if meta_value not in ["normal",
@@ -137,6 +179,7 @@ class MapParser():
                                                          "Invalid value "
                                                          "for the zone "
                                                          f"(l.{i})")
+                                    zone = meta_value
 
                                 if meta_keyword == "color":
                                     if " " in meta_value or "-" in meta_value \
@@ -144,6 +187,7 @@ class MapParser():
                                         raise ValueError(f"{r}[ERROR]{end}: "
                                                          "Invalid color name "
                                                          f"(l.{i})")
+                                    color = meta_value
 
                                 if meta_keyword == "max_drones":
                                     try:
@@ -162,10 +206,36 @@ class MapParser():
                                                          "drones (Needs to be"
                                                          f" above 0) (l.{i})")
 
+                        # Stocks the data in a dictionary
+                        if zone == "":
+                            zone = "normal"
+
+                        if nb_drone == 0:
+                            nb_drone = 1
+
+                        if color == "":
+                            color = None
+
+                        if key == "start_hub":
+                            hub_list.append([key, name, nx, ny, [color]])
+
+                        if key == "end_hub":
+                            hub_list.append([key, name, nx, ny, [color]])
+
+                        if metadata:
+                            hub_list.append([key, name, nx, ny,
+                                            [zone, nb_drone, color]])
+                        else:
+                            zone = "normal"
+                            hub_list.append([key, name, nx, ny,
+                                            [zone, 1, None]])
+
+                    nb_drone = 0
+
                     # Checks the connections and their validity
                     if key == "connection":
                         if "-" in value:
-                            path = value.split(" ")[0]
+                            path: str = value.split(" ")[0]
 
                             metadata = re.findall(r'\[(.+)\]', value)
                             if metadata:
@@ -196,6 +266,13 @@ class MapParser():
                                                          "be above 0)"
                                                          f"(l.{i})")
 
+                        # Stocks the data in a dictionary
+                        if metadata:
+                            hub_list.append([key, [path, nb_drone]])
+                        else:
+                            hub_list.append([key, [path, 1]])
+
+            # Checks if there's a start and an end
             if start_hub == 0:
                 raise ValueError(f"{r}[ERROR]{end}: No start_hub detected")
 
@@ -213,4 +290,4 @@ class MapParser():
             print(e)
             sys.exit()
 
-        return True
+        return (True, hub_list)
