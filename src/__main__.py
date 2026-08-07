@@ -12,6 +12,7 @@ def main() -> None:
         # Parses the given maps
         parse = MapParser()
         valid, maps_dict = parse.parse_file()
+        print(maps_dict)
 
         if (valid is False):
             raise ValueError
@@ -24,7 +25,7 @@ def main() -> None:
 
     # Visualizer
     menu: UserMenu = UserMenu()
-    menu.home_menu()
+    # menu.home_menu(maps_dict)
 
 if __name__ == "__main__":
     try:

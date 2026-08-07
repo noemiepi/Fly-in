@@ -37,6 +37,7 @@ class MapParser():
         """
         maps_dict: dict[str, list[Any]] = {}
         hub_list: list[Any] = []
+        level_list: list[Any] = []
 
         path: list[str] = []
         name: str = ""
@@ -53,7 +54,11 @@ class MapParser():
             # Adds the map's informations in a dictionary with the map's name
             path = file.split("/")
             name = path[3]
-            maps_dict.update({name: hub_list})
+            folder = path[2]
+
+            # hub_list.append([key, name, nx, ny, [color]])
+
+            maps_dict.update({folder: {name: hub_list}})
 
         return (True, maps_dict)
 
