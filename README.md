@@ -18,12 +18,10 @@ python3 -m src # Runs the program
 ```
 
 ## Algorithm Explanation
-*A detailed description of your algorithm choices and implementation strategy must
-also be included*
+*A detailed description of your algorithm choices and implementation strategy must also be included*
 
 ## Visualization
-*Documentation of the visual representation features and how they enhance the user
-experience.*
+*Documentation of the visual representation features and how they enhance the user experience.*
 
 ## Usage example
 *Example input and expected output demonstrating the program’s functionality.*

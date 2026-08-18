@@ -12,20 +12,20 @@ def main() -> None:
         # Parses the given maps
         parse = MapParser()
         valid, maps_dict = parse.parse_file()
-        print(maps_dict)
 
         if (valid is False):
             raise ValueError
 
     except Exception as e:
         print(f"{r}[ERROR]{end}: An unexpected error occured "
-                f"during the parsing:\n-> {e}")
+              f"during the parsing:\n-> {e}")
         exit()
     print(f"{g}[INFO]{end}: Parsing successful!")
 
     # Visualizer
-    menu: UserMenu = UserMenu()
-    # menu.home_menu(maps_dict)
+    menu: UserMenu = UserMenu(maps_dict)
+    menu.home_menu()
+
 
 if __name__ == "__main__":
     try:
@@ -36,4 +36,4 @@ if __name__ == "__main__":
 
     except Exception as e:
         print(f"{r}[ERROR]{end}: An unexpected error occured:\n"
-                f"-> {e}")
+              f"-> {e}")

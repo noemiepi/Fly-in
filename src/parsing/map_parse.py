@@ -1,5 +1,4 @@
 import re
-import sys
 import glob
 
 from typing import Any
@@ -28,16 +27,16 @@ class MapParser():
         except FileNotFoundError:
             raise ValueError
 
-    def parse_file(self) -> tuple[bool, dict[str, list[Any]]]:
+    def parse_file(self) -> bool | \
+            tuple[bool, dict[str, dict[str, dict[str, Any]]]]:
         """
         Parse every map files.
 
         Return
-            -> tuple[bool, dict[str, list[Any]]]
+            -> bool | tuple[bool, dict[str, list[Any]]]
         """
-        maps_dict: dict[str, list[Any]] = {}
-        hub_list: list[Any] = []
-        level_list: list[Any] = []
+        maps_dict: dict[str, dict[str, dict[str, Any]]] = {}
+        level_dict: dict[str, Any] = {}
 
         path: list[str] = []
         name: str = ""
@@ -46,9 +45,9 @@ class MapParser():
 
         # Checks every file one by one
         for file in self.filelist:
-            valid, hub_list = self.is_valid(file)
+            valid, level_dict = self.is_valid(file)
 
-            if (valid is False):
+            if valid is False:
                 return False
 
             # Adds the map's informations in a dictionary with the map's name
@@ -56,13 +55,15 @@ class MapParser():
             name = path[3]
             folder = path[2]
 
-            # hub_list.append([key, name, nx, ny, [color]])
+            maps_dict.setdefault(folder, {name: level_dict})
 
-            maps_dict.update({folder: {name: hub_list}})
+            for key, value in maps_dict.items():
+                if key == folder:
+                    value.update({name: level_dict})
 
         return (True, maps_dict)
 
-    def is_valid(self, file: str) -> tuple[bool, list[Any]]:
+    def is_valid(self, file: str) -> tuple[bool, dict[str, Any]]:
         """
         Checks if the file has the correct configuration
         for the steps definitions and the drones.
@@ -71,9 +72,11 @@ class MapParser():
           - file: str
 
         Return
-          -> tuple[bool, list[Any]]
+          -> tuple[bool, dict[str, Any]]
         """
-        hub_list: list[Any] = []
+        level_dict: dict[str, Any] = {}
+        hub_dict: dict[str, Any] = {}
+        connect_dict: dict[str, Any] = {}
         keyword: list[str] = ["nb_drones", "start_hub", "end_hub",
                               "hub", "connection"]
 
@@ -84,6 +87,9 @@ class MapParser():
         zone: str = ""
         color: str | None = ""
         nb_drone: int = 0
+
+        j: int = 1
+        k: int = 1
 
         try:
             with open(file, "r") as f:
@@ -113,19 +119,16 @@ class MapParser():
                             nb_drone = int(value)
 
                         except ValueError:
-                            raise ValueError(f"{r}[ERROR]{end}: "
-                                                "Invalid drone "
-                                                "number. It should "
-                                                "be an integers"
-                                                f"(l.{i})")
+                            raise ValueError(f"{r}[ERROR]{end}: Invalid drone "
+                                             "number. It should be an integer"
+                                             f"(l.{i})")
 
                         if nb_drone <= 0:
-                            raise ValueError(f"{r}[ERROR]{end}: "
-                                                "Invalid number of "
-                                                "drones (Needs to be"
-                                                f" above 0) (l.{i})")
+                            raise ValueError(f"{r}[ERROR]{end}: Invalid number"
+                                             " of drones (Needs to be above 0)"
+                                             f" (l.{i})")
 
-                        hub_list.append(nb_drone)
+                        level_dict["nb_drones"] = nb_drone
                         first = False
 
                     # Checks the steps and their validity
@@ -222,18 +225,27 @@ class MapParser():
                             color = None
 
                         if key == "start_hub":
-                            hub_list.append([key, name, nx, ny, [color]])
+                            level_dict["start_hub"] = {"name": name,
+                                                       "coords": (nx, ny),
+                                                       "metadata": [color]}
 
                         if key == "end_hub":
-                            hub_list.append([key, name, nx, ny, [color]])
+                            level_dict["end_hub"] = {"name": name,
+                                                     "coords": (nx, ny),
+                                                     "metadata": [color]}
 
-                        if metadata:
-                            hub_list.append([key, name, nx, ny,
-                                            [zone, nb_drone, color]])
-                        else:
-                            zone = "normal"
-                            hub_list.append([key, name, nx, ny,
-                                            [zone, 1, None]])
+                        if key not in ["start_hub", "end_hub"]:
+                            hub_dict.update({f"hub{j}": {
+                                "name": name,
+                                "coords": (nx, ny),
+                                "metadata": {
+                                    "zone": zone,
+                                    "nb_drones": nb_drone,
+                                    "color": color
+                                            }
+                                            }})
+
+                            j += 1
 
                     nb_drone = 0
 
@@ -271,11 +283,18 @@ class MapParser():
                                                          "be above 0)"
                                                          f"(l.{i})")
 
+                        if nb_drone == 0:
+                            nb_drone = 1
+
                         # Stocks the data in a dictionary
-                        if metadata:
-                            hub_list.append([key, [path, nb_drone]])
-                        else:
-                            hub_list.append([key, [path, 1]])
+                        connect_dict.update({f"connection{k}":
+                                             {"path": path,
+                                              "nb_drones": nb_drone}})
+                        k += 1
+
+            # Adds the zones and their connections to the level's dictionary
+            level_dict["hubs"] = hub_dict
+            level_dict["connections"] = connect_dict
 
             # Checks if there's a start and an end
             if start_hub == 0:
@@ -291,8 +310,4 @@ class MapParser():
             raise ValueError(f"{r}[ERROR]{end}: Lack permission to "
                              "open the file")
 
-        except Exception as e:
-            print(e)
-            sys.exit()
-
-        return (True, hub_list)
+        return (True, level_dict)
