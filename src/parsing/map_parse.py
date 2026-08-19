@@ -27,13 +27,12 @@ class MapParser():
         except FileNotFoundError:
             raise ValueError
 
-    def parse_file(self) -> bool | \
-            tuple[bool, dict[str, dict[str, dict[str, Any]]]]:
+    def parse_file(self) -> tuple[bool, dict[str, dict[str, dict[str, Any]]]]:
         """
         Parse every map files.
 
         Return
-            -> bool | tuple[bool, dict[str, list[Any]]]
+            -> tuple[bool, dict[str, dict[str, dict[str, Any]]]]
         """
         maps_dict: dict[str, dict[str, dict[str, Any]]] = {}
         level_dict: dict[str, Any] = {}
@@ -48,7 +47,7 @@ class MapParser():
             valid, level_dict = self.is_valid(file)
 
             if valid is False:
-                return False
+                return (False, maps_dict)
 
             # Adds the map's informations in a dictionary with the map's name
             path = file.split("/")
@@ -227,12 +226,16 @@ class MapParser():
                         if key == "start_hub":
                             level_dict["start_hub"] = {"name": name,
                                                        "coords": (nx, ny),
-                                                       "metadata": [color]}
+                                                       "metadata": {
+                                                           "color": color
+                                                       }}
 
                         if key == "end_hub":
                             level_dict["end_hub"] = {"name": name,
                                                      "coords": (nx, ny),
-                                                     "metadata": [color]}
+                                                     "metadata": {
+                                                           "color": color
+                                                     }}
 
                         if key not in ["start_hub", "end_hub"]:
                             hub_dict.update({f"hub{j}": {
@@ -298,10 +301,10 @@ class MapParser():
 
             # Checks if there's a start and an end
             if start_hub == 0:
-                raise ValueError(f"{r}[ERROR]{end}: No start_hub detected")
+                raise ValueError("No start_hub detected")
 
             if end_hub == 0:
-                raise ValueError(f"{r}[ERROR]{end}: No end_hub detected")
+                raise ValueError("No end_hub detected")
 
         except FileNotFoundError:
             raise ValueError(f"{r}[ERROR]{end}: File not found")

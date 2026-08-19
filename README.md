@@ -23,12 +23,12 @@ python3 -m src # Runs the program
 ## Visualization
 *Documentation of the visual representation features and how they enhance the user experience.*
 
-## Usage example
+## Usage Example
 *Example input and expected output demonstrating the program’s functionality.*
 
 ## Resources
 ### Notions
-#### Glob function
+#### Glob Function
 - https://www.geeksforgeeks.org/python/how-to-use-glob-function-to-find-files-recursively-in-python/
 
 ### GitHub

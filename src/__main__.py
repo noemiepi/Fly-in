@@ -13,7 +13,7 @@ def main() -> None:
         parse = MapParser()
         valid, maps_dict = parse.parse_file()
 
-        if (valid is False):
+        if valid is False:
             raise ValueError
 
     except Exception as e:

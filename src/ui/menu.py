@@ -29,7 +29,7 @@ class UserMenu():
         file_list: list[str] = map_parse.filelist
         sorted_file_list: list[str] = sorted(file_list)
 
-        self.maps_dict: dict[str, dict[str, Any]] = maps_dict
+        self.maps_dict = maps_dict
 
         # Sorts maps by difficulty
         self.map_name_dict: dict[str, list[Any]] = {}
