@@ -28,6 +28,9 @@ python3 -m src # Runs the program
 
 ## Resources
 ### Notions
+#### Dijkstra Algorithm
+- https://www.maths-cours.fr/methode/algorithme-de-dijkstra-etape-par-etape/
+
 #### Glob Function
 - https://www.geeksforgeeks.org/python/how-to-use-glob-function-to-find-files-recursively-in-python/
 

@@ -87,7 +87,7 @@ class Monitor():
             # Creates and stocks the hubs in a dictionary
             if zone == "hubs":
                 for hubs, hub_data in data.items():
-                    for hub_id, value in hub_data.items():
+                    for hub_id, value in hub_data.items():    
                         if hub_id == "name":
                             name = value
 

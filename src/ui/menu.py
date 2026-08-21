@@ -118,12 +118,12 @@ class UserMenu():
 
         return map_data
 
-    def easy_maps(self) -> dict[str, Any]:
+    def easy_maps(self) -> Any:
         """
         Displays the easy map(s) to select.
 
         Return
-            -> dict[str, Any]
+            -> Any
         """
         line: str = ""
         space: str = ""
@@ -194,12 +194,12 @@ class UserMenu():
             os.system('clear')
             print(f"\n{e}")
 
-    def normal_maps(self) -> dict[str, Any]:
+    def normal_maps(self) -> Any:
         """
         Displays the normal map(s) to select.
 
         Return
-            -> dict[str, Any]
+            -> Any
         """
         line: str = ""
         space: str = ""
@@ -270,12 +270,12 @@ class UserMenu():
             os.system('clear')
             print(f"\n{e}")
 
-    def hard_maps(self) -> dict[str, Any]:
+    def hard_maps(self) -> Any:
         """
         Displays the hard map(s) to select.
 
         Return
-            -> dict[str, Any]
+            -> Any
         """
         line: str = ""
         space: str = ""
@@ -346,12 +346,12 @@ class UserMenu():
             os.system('clear')
             print(f"\n{e}")
 
-    def hardcore_maps(self) -> dict[str, Any]:
+    def hardcore_maps(self) -> Any:
         """
         Displays the challenger map(s) to select.
 
         Return
-            -> dict[str, Any]
+            -> Any
         """
         line: str = ""
         space: str = ""
@@ -422,12 +422,12 @@ class UserMenu():
             os.system('clear')
             print(f"\n{e}")
 
-    def creative_maps(self) -> dict[str, Any]:
+    def creative_maps(self) -> Any:
         """
         Displays the custom map(s) to select.
 
         Return
-            -> dict[str, Any]
+            -> Any
         """
         line: str = ""
         space: str = ""
