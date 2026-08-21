@@ -1,5 +1,8 @@
+from typing import Any
+
 from src.parsing.map_parse import MapParser
 from src.ui.menu import UserMenu
+from src.monitor import Monitor
 
 
 end = "\033[0m"
@@ -24,7 +27,14 @@ def main() -> None:
 
     # Visualizer
     menu: UserMenu = UserMenu(maps_dict)
-    menu.home_menu()
+    map_data: dict[str, Any] = menu.home_menu()
+    print()
+    print(map_data)
+    print()
+
+    # Map monitor
+    monitor: Monitor = Monitor(map_data)
+    monitor.create_level()
 
 
 if __name__ == "__main__":

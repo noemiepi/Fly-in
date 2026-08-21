@@ -16,12 +16,12 @@ class UserMenu():
     This class shows the user menu to select a map for the simulaton.
 
     Attributes:
-      - home_menu(self) -> None
-      - easy_maps(self) -> None
-      - normal_maps(self) -> None
-      - hard_maps(self) -> None
-      - hardcore_maps(self) -> None
-      - creative_maps(self) -> None
+      - home_menu(self) -> dict[str, Any]
+      - easy_maps(self) -> dict[str, Any]
+      - normal_maps(self) -> dict[str, Any]
+      - hard_maps(self) -> dict[str, Any]
+      - hardcore_maps(self) -> dict[str, Any]
+      - creative_maps(self) -> dict[str, Any]
     """
     def __init__(self, maps_dict: dict[str, dict[str, Any]]) -> None:
         map_parse: MapParser = MapParser()
@@ -46,13 +46,15 @@ class UserMenu():
                 if key == folder:
                     value.append(name)
 
-    def home_menu(self) -> None:
+    def home_menu(self) -> dict[str, Any]:
         """
         Displays the main menu with each map's difficulty.
 
         Return
-            -> None
+            -> dict[str, Any]
         """
+        map_data: dict[str, Any] = {}
+
         os.system('clear')
         print()
         print("███████╗██╗  ██╗     ██╗     ██████╗██╗   ██╗")
@@ -83,23 +85,23 @@ class UserMenu():
 
             elif choice == 1:
                 os.system('clear')
-                self.easy_maps()
+                map_data = self.easy_maps()
 
             elif choice == 2:
                 os.system('clear')
-                self.normal_maps()
+                map_data = self.normal_maps()
 
             elif choice == 3:
                 os.system('clear')
-                self.hard_maps()
+                map_data = self.hard_maps()
 
             elif choice == 4:
                 os.system('clear')
-                self.hardcore_maps()
+                map_data = self.hardcore_maps()
 
             elif choice == 5:
                 os.system('clear')
-                self.creative_maps()
+                map_data = self.creative_maps()
 
             elif choice == 6:
                 print("\n             Exiting the program...")
@@ -114,12 +116,14 @@ class UserMenu():
             os.system('clear')
             print(f"\n{e}")
 
-    def easy_maps(self) -> None:
+        return map_data
+
+    def easy_maps(self) -> dict[str, Any]:
         """
         Displays the easy map(s) to select.
 
         Return
-            -> None
+            -> dict[str, Any]
         """
         line: str = ""
         space: str = ""
@@ -179,9 +183,7 @@ class UserMenu():
                         if folder == "easy":
                             for name, info in maps.items():
                                 if name == level[choice - 1]:
-                                    print()
-                                    print(name)
-                                    print(info)
+                                    return info
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
@@ -192,12 +194,12 @@ class UserMenu():
             os.system('clear')
             print(f"\n{e}")
 
-    def normal_maps(self) -> None:
+    def normal_maps(self) -> dict[str, Any]:
         """
         Displays the normal map(s) to select.
 
         Return
-            -> None
+            -> dict[str, Any]
         """
         line: str = ""
         space: str = ""
@@ -256,11 +258,8 @@ class UserMenu():
                     for folder, level in self.map_name_dict.items():
                         if folder == "medium":
                             for name, info in maps.items():
-                                # print(name)
                                 if name == level[choice - 1]:
-                                    print()
-                                    print(name)
-                                    print(info)
+                                    return info
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
@@ -271,12 +270,12 @@ class UserMenu():
             os.system('clear')
             print(f"\n{e}")
 
-    def hard_maps(self) -> None:
+    def hard_maps(self) -> dict[str, Any]:
         """
         Displays the hard map(s) to select.
 
         Return
-            -> None
+            -> dict[str, Any]
         """
         line: str = ""
         space: str = ""
@@ -336,9 +335,7 @@ class UserMenu():
                         if folder == "hard":
                             for name, info in maps.items():
                                 if name == level[choice - 1]:
-                                    print()
-                                    print(name)
-                                    print(info)
+                                    return info
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
@@ -349,12 +346,12 @@ class UserMenu():
             os.system('clear')
             print(f"\n{e}")
 
-    def hardcore_maps(self) -> None:
+    def hardcore_maps(self) -> dict[str, Any]:
         """
         Displays the challenger map(s) to select.
 
         Return
-            -> None
+            -> dict[str, Any]
         """
         line: str = ""
         space: str = ""
@@ -414,9 +411,7 @@ class UserMenu():
                         if folder == "challenger":
                             for name, info in maps.items():
                                 if name == level[choice - 1]:
-                                    print()
-                                    print(name)
-                                    print(info)
+                                    return info
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
@@ -427,12 +422,12 @@ class UserMenu():
             os.system('clear')
             print(f"\n{e}")
 
-    def creative_maps(self) -> None:
+    def creative_maps(self) -> dict[str, Any]:
         """
         Displays the custom map(s) to select.
 
         Return
-            -> None
+            -> dict[str, Any]
         """
         line: str = ""
         space: str = ""
@@ -492,9 +487,7 @@ class UserMenu():
                         if folder == "custom":
                             for name, info in maps.items():
                                 if name == level[choice - 1]:
-                                    print()
-                                    print(name)
-                                    print(info)
+                                    return info
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")

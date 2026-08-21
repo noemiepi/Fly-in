@@ -68,7 +68,7 @@ class Monitor():
                     if key == "metadata":
                         metadata: dict[str, Any] = value
 
-                    self.zones["start"] = Zone(name, coords, metadata)
+                self.zones["start"] = Zone(name, coords, metadata)
 
             # Creates and stocks the end hub in a dictionary
             if zone == "end_hub":
@@ -82,20 +82,19 @@ class Monitor():
                     if key == "metadata":
                         metadata = value
 
-                    self.zones["end"] = Zone(name, coords, metadata)
+                self.zones["end"] = Zone(name, coords, metadata)
 
             # Creates and stocks the hubs in a dictionary
             if zone == "hubs":
-                for hubs, hubs_data in data.items():
-                    for hub_id, hub_data in hubs_data.items():
-                        for key, value in hub_data.items():
-                            if key == "name":
-                                name = value
+                for hubs, hub_data in data.items():
+                    for hub_id, value in hub_data.items():
+                        if hub_id == "name":
+                            name = value
 
-                            if key == "coords":
-                                coords = value
+                        if hub_id == "coords":
+                            coords = value
 
-                            if key == "metadata":
-                                metadata = value
+                        if hub_id == "metadata":
+                            metadata = value
 
-                            self.zones[hub_id] = Zone(name, coords, metadata)
+                self.zones[hub_id] = Zone(name, coords, metadata)
