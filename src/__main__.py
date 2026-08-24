@@ -1,6 +1,7 @@
 from typing import Any
 
 from src.parsing.map_parse import MapParser
+from src.ui.visual import Visualizer
 from src.ui.menu import UserMenu
 from src.monitor import Monitor
 
@@ -36,6 +37,10 @@ def main() -> None:
     monitor: Monitor = Monitor(map_data)
     monitor.create_level()
 
+    # Visualizer
+    visual: Visualizer = Visualizer(monitor)
+    visual.start_visual()
+
 
 if __name__ == "__main__":
     try:
@@ -44,6 +49,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print(f"\n{g}[INFO]{end}: Quitting Fly-in!")
 
-    except Exception as e:
-        print(f"{r}[ERROR]{end}: An unexpected error occured:\n"
-              f"-> {e}")
+    # except Exception as e:
+    #     print(f"{r}[ERROR]{end}: An unexpected error occured:\n"
+    #           f"-> {e}")

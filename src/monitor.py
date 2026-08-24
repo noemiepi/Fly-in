@@ -55,18 +55,22 @@ class Monitor():
         Return
             -> None
         """
+        name: str = ""
+        coords: tuple[int, int] = ()
+        metadata: dict[str, Any] = {}
+
         for zone, data in self.level.items():
             # Creates and stocks the start hub in a dictionary
             if zone == "start_hub":
                 for key, value in data.items():
                     if key == "name":
-                        name: str = value
+                        name = value
 
                     if key == "coords":
-                        coords: tuple[int, int] = value
+                        coords = value
 
                     if key == "metadata":
-                        metadata: dict[str, Any] = value
+                        metadata = value
 
                 self.zones["start"] = Zone(name, coords, metadata)
 
@@ -87,7 +91,7 @@ class Monitor():
             # Creates and stocks the hubs in a dictionary
             if zone == "hubs":
                 for hubs, hub_data in data.items():
-                    for hub_id, value in hub_data.items():    
+                    for hub_id, value in hub_data.items():
                         if hub_id == "name":
                             name = value
 
@@ -97,4 +101,4 @@ class Monitor():
                         if hub_id == "metadata":
                             metadata = value
 
-                self.zones[hub_id] = Zone(name, coords, metadata)
+                    self.zones[hubs] = Zone(name, coords, metadata)

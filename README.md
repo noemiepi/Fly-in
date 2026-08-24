@@ -34,5 +34,8 @@ python3 -m src # Runs the program
 #### Glob Function
 - https://www.geeksforgeeks.org/python/how-to-use-glob-function-to-find-files-recursively-in-python/
 
+#### Arcade Library
+- https://api.arcade.academy/en/stable/
+
 ### GitHub
 -
