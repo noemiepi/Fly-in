@@ -27,8 +27,10 @@ def main() -> None:
     print(f"{g}[INFO]{end}: Parsing successful!")
 
     # Visualizer
+    lvl_name: str = ""
+    map_data: dict[str, Any] = {}
     menu: UserMenu = UserMenu(maps_dict)
-    map_data: dict[str, Any] = menu.home_menu()
+    lvl_name, map_data = menu.home_menu()
     print()
     print(map_data)
     print()
@@ -38,7 +40,7 @@ def main() -> None:
     monitor.create_level()
 
     # Visualizer
-    visual: Visualizer = Visualizer(monitor)
+    visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)
     visual.start_visual()
 
 

@@ -19,6 +19,9 @@ class Monitor():
 
         self.drones: dict[str, Drone] = {}
         self.zones: dict[str, Zone] = {}
+        self.connections: dict[str, Any] = {}
+
+        self.visual_connections: list[tuple[Any, Any]] = []
 
     def create_level(self) -> None:
         """
@@ -29,6 +32,25 @@ class Monitor():
         """
         self._create_drones()
         self._create_zones()
+
+        for zone, data in self.level.items():
+            if zone == "connections":
+                self.connections = data
+
+                for nb_con, con in data.items():
+                    for key, value in con.items():
+                        if key == "path":
+                            value = value.split("-")
+                            from_p: str = value[0]
+                            to_p: str = value[1]
+                            for name, zone in self.zones.items():
+                                if zone.name == from_p:
+                                    from_coords: tuple[int, int] = zone.coords
+                                elif zone.name == to_p:
+                                    to_coords: tuple[int, int] = zone.coords
+
+                            self.visual_connections.append((from_coords,
+                                                            to_coords))
 
     def _create_drones(self) -> None:
         """

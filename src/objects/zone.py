@@ -9,9 +9,10 @@ class Zone():
                  metadata: dict[str, Any]) -> None:
         self.name = name
 
+        self.coords = coords
         self.x: int = 0
         self.y: int = 0
-        self.x, self.y = coords
+        self.x, self.y = self.coords
 
         self.zone: str = ""
         self.nb_drones: int = 0

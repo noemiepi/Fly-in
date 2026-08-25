@@ -46,14 +46,14 @@ class UserMenu():
                 if key == folder:
                     value.append(name)
 
-    def home_menu(self) -> dict[str, Any]:
+    def home_menu(self) -> tuple[str, dict[str, Any]]:
         """
         Displays the main menu with each map's difficulty.
 
         Return
-            -> dict[str, Any]
+            -> tuple[str, dict[str, Any]]
         """
-        map_data: dict[str, Any] = {}
+        map_data: tuple[str, dict[str, Any]] = {}
 
         os.system('clear')
         print()
@@ -183,7 +183,7 @@ class UserMenu():
                         if folder == "easy":
                             for name, info in maps.items():
                                 if name == level[choice - 1]:
-                                    return info
+                                    return (name, info)
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
@@ -259,7 +259,7 @@ class UserMenu():
                         if folder == "medium":
                             for name, info in maps.items():
                                 if name == level[choice - 1]:
-                                    return info
+                                    return (name, info)
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
@@ -335,7 +335,7 @@ class UserMenu():
                         if folder == "hard":
                             for name, info in maps.items():
                                 if name == level[choice - 1]:
-                                    return info
+                                    return (name, info)
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
@@ -411,7 +411,7 @@ class UserMenu():
                         if folder == "challenger":
                             for name, info in maps.items():
                                 if name == level[choice - 1]:
-                                    return info
+                                    return (name, info)
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
@@ -487,7 +487,7 @@ class UserMenu():
                         if folder == "custom":
                             for name, info in maps.items():
                                 if name == level[choice - 1]:
-                                    return info
+                                    return (name, info)
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
