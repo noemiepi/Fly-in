@@ -20,7 +20,7 @@ FONT_PATH = "assets/font/"
 
 SCALE = 0.5
 SPRITE_SIZE = 256
-OFFSET = WINDOW_WIDTH / 3.5
+MARGIN = 150
 # ----------------- #
 
 
@@ -46,10 +46,9 @@ class Visualizer(arcade.Window):
         self.monitor = monitor
 
         self._load_sprites()
-        self._setup()
-        self._build_connections()
+        self.setup()
 
-    def _setup(self) -> None:
+    def setup(self) -> None:
         """
         Initializes the visual.
 
@@ -69,17 +68,36 @@ class Visualizer(arcade.Window):
                            font_name="Minecraft")
         self.text_list.append(text)
 
+        x_lst: list[int] = [data.x for data in self.monitor.zones.values()]
+        y_lst: list[int] = [data.y for data in self.monitor.zones.values()]
+        min_x, max_x = min(x_lst), max(x_lst)
+        min_y, max_y = min(y_lst), max(y_lst)
+
+        width_units = max_x - min_x
+        height_units = max_y - min_y
+
+        avail_w = WINDOW_WIDTH - 2 * MARGIN
+        avail_h = WINDOW_HEIGHT - 2 * MARGIN
+        spacing_x = avail_w / width_units if width_units else SPRITE_SIZE
+        spacing_y = avail_h / height_units if height_units else SPRITE_SIZE
+
+        self.spacing = min(spacing_x, spacing_y, SPRITE_SIZE)
+        self.center_gx = (min_x + max_x) / 2
+        self.center_gy = (min_y + max_y) / 2
+
         for zone, data in self.monitor.zones.items():
-            x: int = ((WINDOW_WIDTH / 2) + (data.x * SPRITE_SIZE) - OFFSET)
-            y: int = ((WINDOW_HEIGHT / 2) + (data.y * SPRITE_SIZE))
+            x: int = ((WINDOW_WIDTH / 2) + (data.x - self.center_gx)
+                      * self.spacing)
+            y: int = ((WINDOW_HEIGHT / 2) + (data.y - self.center_gy)
+                      * self.spacing)
 
             if zone == "start":
                 self.start.center_x = x
-                self.start.center_y = y
+                self.start.center_y = y + 35
                 self.zone_list.append(self.start)
 
                 text = arcade.Text(text=data.name,
-                                   x=x, y=y - 100,
+                                   x=x, y=y - 60,
                                    color=arcade.color.WHITE,
                                    font_size=13, anchor_x="center",
                                    font_name="Minecraft")
@@ -87,11 +105,11 @@ class Visualizer(arcade.Window):
 
             elif zone == "end":
                 self.end.center_x = x
-                self.end.center_y = y
+                self.end.center_y = y + 10
                 self.zone_list.append(self.end)
 
                 text = arcade.Text(text=data.name,
-                                   x=x, y=y - 100,
+                                   x=x, y=y - 90,
                                    color=arcade.color.WHITE,
                                    font_size=13, anchor_x="center",
                                    font_name="Minecraft")
@@ -99,6 +117,8 @@ class Visualizer(arcade.Window):
 
             else:
                 self._build_zone(data.name, data.zone, x, y)
+
+        self._build_connections()
 
     def on_draw(self) -> None:
         """
@@ -109,8 +129,11 @@ class Visualizer(arcade.Window):
         """
         self.clear()
 
+        # Draws the background
         # arcade.draw_texture_rect(self.background,
-        #                          arcade.LBWH(0, 0, self.width, self.height))
+        #                          arcade.LBWH(0, 0,
+        #                                      WINDOW_WIDTH,
+        #                                      WINDOW_HEIGHT))
 
         # Draws the selected map
         self.connection_list.draw()
@@ -161,12 +184,12 @@ class Visualizer(arcade.Window):
             normal: arcade.Sprite = arcade.Sprite(self.normal,
                                                   scale=SCALE)
             normal.center_x = x
-            normal.center_y = y
+            normal.center_y = y + 10
 
             self.zone_list.append(normal)
 
             text = arcade.Text(text=name,
-                               x=x, y=y - 75,
+                               x=x, y=y - 65,
                                color=arcade.color.WHITE,
                                font_size=13, anchor_x="center",
                                font_name="Minecraft")
@@ -176,12 +199,12 @@ class Visualizer(arcade.Window):
             priority: arcade.Sprite = arcade.Sprite(self.priority,
                                                     scale=SCALE)
             priority.center_x = x
-            priority.center_y = y
+            priority.center_y = y + 20
 
             self.zone_list.append(priority)
 
             text = arcade.Text(text=name,
-                               x=x, y=y - 75,
+                               x=x, y=y - 55,
                                color=arcade.color.WHITE,
                                font_size=13, anchor_x="center",
                                font_name="Minecraft")
@@ -189,14 +212,14 @@ class Visualizer(arcade.Window):
 
         if zone == "restricted":
             restricted: arcade.Sprite = arcade.Sprite(self.restricted,
-                                                      scale=SCALE)
+                                                      scale=SCALE * 0.75)
             restricted.center_x = x
-            restricted.center_y = y
+            restricted.center_y = y + 10
 
             self.zone_list.append(restricted)
 
             text = arcade.Text(text=name,
-                               x=x, y=y - 125,
+                               x=x, y=y - 100,
                                color=arcade.color.WHITE,
                                font_size=13, anchor_x="center",
                                font_name="Minecraft")
@@ -204,14 +227,14 @@ class Visualizer(arcade.Window):
 
         if zone == "blocked":
             blocked: arcade.Sprite = arcade.Sprite(self.blocked,
-                                                   scale=SCALE)
+                                                   scale=SCALE * 0.75)
             blocked.center_x = x
-            blocked.center_y = y
+            blocked.center_y = y + 10
 
             self.zone_list.append(blocked)
 
             text = arcade.Text(text=name,
-                               x=x, y=y - 100,
+                               x=x, y=y - 90,
                                color=arcade.color.WHITE,
                                font_size=13, anchor_x="center",
                                font_name="Minecraft")
@@ -238,10 +261,18 @@ class Visualizer(arcade.Window):
             from_x, from_y = from_p
             to_x, to_y = to_p
 
+            from_x = ((WINDOW_WIDTH / 2) + (from_x - self.center_gx)
+                      * self.spacing)
+            from_y = ((WINDOW_HEIGHT / 2) + (from_y - self.center_gy)
+                      * self.spacing)
+            to_x = ((WINDOW_WIDTH / 2) + (to_x - self.center_gx)
+                    * self.spacing)
+            to_y = ((WINDOW_HEIGHT / 2) + (to_y - self.center_gy)
+                    * self.spacing)
+
             line = arcade.shape_list.create_line(from_x, from_y,
                                                  to_x, to_y,
-                                                 arcade.color.BLACK,
-                                                 3)
+                                                 arcade.color.WHITE, 2)
             self.connection_list.append(line)
 
     def _load_sprites(self) -> None:
