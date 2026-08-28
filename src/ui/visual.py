@@ -1,7 +1,6 @@
 import os
 import arcade
-
-from typing import Any
+import random
 
 from src.monitor import Monitor
 
@@ -30,9 +29,12 @@ class Visualizer(arcade.Window):
     there will be a visual of the map.
 
     Attributes:
+      - setup(self) -> None
       - on_draw(self) -> None
-      - start(self) -> None
+      - start_visual(self) -> None
       - on_key_press(self, key: int, _modifiers: int) -> None
+      - _build_zone(self, name: str, zone: str, x: int, y: int) -> None
+      - _build_connections(self) -> None
       - _load_sprites(self) -> None
     """
     def __init__(self, lvl_name: str, monitor: Monitor) -> None:
@@ -55,10 +57,11 @@ class Visualizer(arcade.Window):
         Return
             -> None
         """
-        self.zone_list: arcade.SpriteList = arcade.SpriteList()
+        self.zone_list: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
+        self.drone_list: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
         self.connection_list: (arcade.shape_list.
                                ShapeElementList[arcade.shape_list.Shape]) = \
-                                arcade.shape_list.ShapeElementList()
+            arcade.shape_list.ShapeElementList()
         self.text_list: list[arcade.Text] = []
 
         text = arcade.Text(text=self.lvl_name,
@@ -81,15 +84,15 @@ class Visualizer(arcade.Window):
         spacing_x = avail_w / width_units if width_units else SPRITE_SIZE
         spacing_y = avail_h / height_units if height_units else SPRITE_SIZE
 
-        self.spacing = min(spacing_x, spacing_y, SPRITE_SIZE)
-        self.center_gx = (min_x + max_x) / 2
-        self.center_gy = (min_y + max_y) / 2
+        self.spacing: float | int = min(spacing_x, spacing_y, SPRITE_SIZE)
+        self.center_gx: float = (min_x + max_x) / 2
+        self.center_gy: float = (min_y + max_y) / 2
 
         for zone, data in self.monitor.zones.items():
-            x: int = ((WINDOW_WIDTH / 2) + (data.x - self.center_gx)
-                      * self.spacing)
-            y: int = ((WINDOW_HEIGHT / 2) + (data.y - self.center_gy)
-                      * self.spacing)
+            x: float = ((WINDOW_WIDTH / 2) + (data.x - self.center_gx)
+                        * self.spacing)
+            y: float = ((WINDOW_HEIGHT / 2) + (data.y - self.center_gy)
+                        * self.spacing)
 
             if zone == "start":
                 self.start.center_x = x
@@ -102,6 +105,8 @@ class Visualizer(arcade.Window):
                                    font_size=13, anchor_x="center",
                                    font_name="Minecraft")
                 self.text_list.append(text)
+
+                self._create_drones(x, y)
 
             elif zone == "end":
                 self.end.center_x = x
@@ -139,6 +144,9 @@ class Visualizer(arcade.Window):
         self.connection_list.draw()
         self.zone_list.draw()
 
+        # Draws the drones
+        self.drone_list.draw()
+
         # Prints the zone and level name in the window
         for text in self.text_list:
             text.draw()
@@ -167,15 +175,15 @@ class Visualizer(arcade.Window):
             print("Closing the visual!")
             arcade.exit()
 
-    def _build_zone(self, name: str, zone: str, x: int, y: int) -> None:
+    def _build_zone(self, name: str, zone: str, x: float, y: float) -> None:
         """
         Builds the different zones and display their name below.
 
         Parameters:
           - name: str
           - zone: str
-          - x: int
-          - y: int
+          - x: float
+          - y: float
 
         Return
             -> None
@@ -247,13 +255,13 @@ class Visualizer(arcade.Window):
         Return
             -> None
         """
-        from_p: tuple[int, int] = ()
-        to_p: tuple[int, int] = ()
+        from_p: tuple[int, int]
+        to_p: tuple[int, int]
 
-        from_x: int
-        from_y: int
-        to_x: int
-        to_y: int
+        from_x: float
+        from_y: float
+        to_x: float
+        to_y: float
 
         for connection in self.monitor.visual_connections:
             from_p, to_p = connection
@@ -275,6 +283,26 @@ class Visualizer(arcade.Window):
                                                  arcade.color.WHITE, 2)
             self.connection_list.append(line)
 
+    def _create_drones(self, x: float, y: float) -> None:
+        """
+        Makes the drones on the start.
+
+        Parameters:
+          - x: float
+          - y: float
+
+        Return
+            -> None
+        """
+
+        for drones in self.monitor.drones:
+            drone: arcade.Sprite = arcade.Sprite(self.drone,
+                                                 scale=SCALE * 0.15)
+            drone.center_x = x - random.randint(0, 10)
+            drone.center_y = y + random.randint(0, 10)
+
+            self.drone_list.append(drone)
+
     def _load_sprites(self) -> None:
         """
         Loads the necessary sprites.
@@ -288,7 +316,7 @@ class Visualizer(arcade.Window):
 
             # Loads the background image
             # self.background: arcade.Texture = \
-            #     arcade.load_texture(f"{BACK_PATH}")
+            #     arcade.load_texture(f"{BACK_PATH}back.png")
 
             # Creation of the different types of hubs
             self.start: arcade.Sprite = \
@@ -307,7 +335,7 @@ class Visualizer(arcade.Window):
                 arcade.load_texture(f"{HUB_PATH}blocked.png")
 
             # Creation of a drone
-            # self.drone = arcade.Sprite(f"{DRONE_PATH}bee.gif")
+            self.drone = arcade.load_texture(f"{DRONE_PATH}bee.png")
 
             # Loads the text font
             arcade.load_font(f"{FONT_PATH}MinecraftFont.woff")

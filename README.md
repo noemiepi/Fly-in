@@ -28,6 +28,9 @@ python3 -m src # Runs the program
 
 ## Resources
 ### Notions
+#### Path Finding Algorithms
+- https://graphable.ai/blog/pathfinding-algorithms/
+
 #### Dijkstra Algorithm
 - https://www.maths-cours.fr/methode/algorithme-de-dijkstra-etape-par-etape/
 

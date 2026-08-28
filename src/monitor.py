@@ -33,8 +33,8 @@ class Monitor():
         self._create_drones()
         self._create_zones()
 
-        for zone, data in self.level.items():
-            if zone == "connections":
+        for hub, data in self.level.items():
+            if hub == "connections":
                 self.connections = data
 
                 for nb_con, con in data.items():
@@ -78,7 +78,7 @@ class Monitor():
             -> None
         """
         name: str = ""
-        coords: tuple[int, int] = ()
+        coords: tuple[int, int]
         metadata: dict[str, Any] = {}
 
         for zone, data in self.level.items():

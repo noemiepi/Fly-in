@@ -46,14 +46,14 @@ class UserMenu():
                 if key == folder:
                     value.append(name)
 
-    def home_menu(self) -> tuple[str, dict[str, Any]]:
+    def home_menu(self) -> tuple[str, Any]:
         """
         Displays the main menu with each map's difficulty.
 
         Return
-            -> tuple[str, dict[str, Any]]
+            -> tuple[str, Any]
         """
-        map_data: tuple[str, dict[str, Any]] = {}
+        map_data: tuple[str, Any]
 
         os.system('clear')
         print()
