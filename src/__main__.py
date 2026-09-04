@@ -4,6 +4,7 @@ from src.parsing.map_parse import MapParser
 from src.ui.visual import Visualizer
 from src.ui.menu import UserMenu
 from src.monitor import Monitor
+from src.algorithm.dijkstra import dijkstra
 
 
 end = "\033[0m"
@@ -42,6 +43,8 @@ def main() -> None:
     # Visualizer
     visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)
     visual.start_visual()
+
+    dijkstra(monitor.zones, monitor.connections, monitor.zones["start"])
 
 
 if __name__ == "__main__":
