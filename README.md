@@ -36,6 +36,8 @@ python3 -m src # Runs the program
 
 - https://major-prepa.com/python/algorithme-dijkstra/
 
+- https://www.datacamp.com/tutorial/dijkstra-algorithm-in-python?
+
 #### Glob Function
 - https://www.geeksforgeeks.org/python/how-to-use-glob-function-to-find-files-recursively-in-python/
 

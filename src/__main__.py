@@ -1,10 +1,10 @@
 from typing import Any
 
 from src.parsing.map_parse import MapParser
+from src.algorithm.dijkstra import Dijkstra
 from src.ui.visual import Visualizer
 from src.ui.menu import UserMenu
 from src.monitor import Monitor
-from src.algorithm.dijkstra import dijkstra
 
 
 end = "\033[0m"
@@ -32,19 +32,18 @@ def main() -> None:
     map_data: dict[str, Any] = {}
     menu: UserMenu = UserMenu(maps_dict)
     lvl_name, map_data = menu.home_menu()
-    print()
-    print(map_data)
-    print()
 
     # Map monitor
     monitor: Monitor = Monitor(map_data)
     monitor.create_level()
 
+    # Starts the algorithm
+    algo: Dijkstra = Dijkstra(monitor.zones)
+    print(algo.find_shortest(monitor.zones["start"]))
+
     # Visualizer
     visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)
     visual.start_visual()
-
-    dijkstra(monitor.zones, monitor.connections, monitor.zones["start"])
 
 
 if __name__ == "__main__":

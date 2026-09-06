@@ -30,27 +30,32 @@ class Monitor():
         Return
             -> None
         """
+        for hub, data in self.level.items():
+            if hub == "connections":
+                self.connections = data
+
         self._create_drones()
         self._create_zones()
 
         for hub, data in self.level.items():
             if hub == "connections":
-                self.connections = data
-
                 for nb_con, con in data.items():
                     for key, value in con.items():
                         if key == "path":
                             value = value.split("-")
                             from_p: str = value[0]
                             to_p: str = value[1]
+                            
                             for name, zone in self.zones.items():
                                 if zone.name == from_p:
                                     from_coords: tuple[int, int] = zone.coords
+
                                 elif zone.name == to_p:
                                     to_coords: tuple[int, int] = zone.coords
 
                             self.visual_connections.append((from_coords,
                                                             to_coords))
+
 
     def _create_drones(self) -> None:
         """
@@ -94,7 +99,9 @@ class Monitor():
                     if key == "metadata":
                         metadata = value
 
-                self.zones["start"] = Zone(name, coords, metadata)
+                self.zones["start"] = Zone(name, coords,
+                                           metadata,
+                                           self.connections)
 
             # Creates and stocks the end hub in a dictionary
             if zone == "end_hub":
@@ -108,7 +115,9 @@ class Monitor():
                     if key == "metadata":
                         metadata = value
 
-                self.zones["end"] = Zone(name, coords, metadata)
+                self.zones["end"] = Zone(name, coords,
+                                         metadata,
+                                         self.connections)
 
             # Creates and stocks the hubs in a dictionary
             if zone == "hubs":
@@ -123,4 +132,6 @@ class Monitor():
                         if hub_id == "metadata":
                             metadata = value
 
-                    self.zones[hubs] = Zone(name, coords, metadata)
+                    self.zones[hubs] = Zone(name, coords,
+                                            metadata,
+                                            self.connections)

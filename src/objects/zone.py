@@ -6,8 +6,11 @@ class Zone():
     This class will create a zone object.
     """
     def __init__(self, name: str, coords: tuple[int, int],
-                 metadata: dict[str, Any]) -> None:
+                 metadata: dict[str, Any],
+                 connections: dict[str, Any]) -> None:
         self.name = name
+
+        self.neighbours: list[str] = []
 
         self.coords = coords
         self.x: int = 0
@@ -27,3 +30,13 @@ class Zone():
 
             if key == "color":
                 self.color = value
+
+        for connection, values in connections.items():
+            for key, value in values.items():
+                if key == "path":
+                    if name in value:
+                        steps: list[str] = value.split('-')
+                        if steps[0] == name:
+                            self.neighbours.append(steps[1])
+                        if steps[1] == name:
+                            self.neighbours.append(steps[0])
