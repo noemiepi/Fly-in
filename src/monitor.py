@@ -45,7 +45,7 @@ class Monitor():
                             value = value.split("-")
                             from_p: str = value[0]
                             to_p: str = value[1]
-                            
+
                             for name, zone in self.zones.items():
                                 if zone.name == from_p:
                                     from_coords: tuple[int, int] = zone.coords

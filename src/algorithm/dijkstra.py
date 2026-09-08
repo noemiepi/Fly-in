@@ -6,8 +6,38 @@ import numpy as np
 from src.objects.zone import Zone
 
 class Dijkstra():
+    """
+    This is the class for the algorithm that will be used
+    to navigate the drones.
+
+    Attributes:
+    - find_shortest(self, start: Zone) -> list[int]
+    """
     def __init__(self, zones: dict[str, Zone] = {}):
         self.zones = zones
+        self.zone_weight: dict[str, float] = {}
+
+        for name, zone in self.zones.items():
+            for neighbour in zone.neighbours:
+                for name, zone in self.zones.items():
+                    if zone.name == neighbour:
+                        if zone.zone == "normal":
+                            self.zone_weight[zone.name] = 1
+
+                        if zone.zone == "blocked":
+                            self.zone_weight[zone.name] = np.inf
+
+                        if zone.zone == "restricted":
+                            self.zone_weight[zone.name] = 2
+
+                        if zone.zone == "priority":
+                            self.zone_weight[zone.name] = 0
+
+                        if zone.name == "start":
+                            self.zone_weight[zone.name] = np.inf
+
+                        if zone.name == "goal":
+                            self.zone_weight[zone.name] = 0
 
     def find_shortest(self, start: Zone) -> list[int]:
         """
@@ -18,16 +48,16 @@ class Dijkstra():
         - start: Zone
 
         Return
-        -> dict[str, int]
+        -> list[int]
         """
         # Initialize every nodes value to infinity
         dist: dict[str, int] = {node.name: np.inf
                                 for name, node in self.zones.items()}
-        dist[start] = 0
+        dist["start"] = 0
         visited_nodes: list[int] = []
 
         # Initialize a priority queue
-        priority: list[Any] = [(0, start)]
+        priority: list[Any] = [(0, "start")]
         heapify(priority)
 
         # Loops until the priority queue is empty
@@ -41,10 +71,12 @@ class Dijkstra():
                 visited_nodes.append(curr_node)
 
             # Checks the closest neighbour to the node
-            for neighbour, weight in self.zones[curr_node].items():
-                calc_dist = curr_dist + weight
-                if calc_dist < dist[neighbour]:
-                    dist[neighbour] = calc_dist
-                    heappush(priority, (calc_dist, neighbour))
+            for neighbour in self.zones[curr_node].neighbours:
+                for name, weight in self.zone_weight.items():
+                    if neighbour == name:
+                        calc_dist = curr_dist + weight
+                        if calc_dist < dist[neighbour]:
+                            dist[neighbour] = calc_dist
+                            heappush(priority, (calc_dist, neighbour))
 
         return dist
