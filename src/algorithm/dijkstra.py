@@ -5,6 +5,7 @@ import numpy as np
 
 from src.objects.zone import Zone
 
+
 class Dijkstra():
     """
     This is the class for the algorithm that will be used
@@ -28,32 +29,34 @@ class Dijkstra():
                             self.zone_weight[zone.name] = np.inf
 
                         if zone.zone == "restricted":
-                            self.zone_weight[zone.name] = 2
+                            self.zone_weight[zone.name] = 4
 
                         if zone.zone == "priority":
-                            self.zone_weight[zone.name] = 0
+                            self.zone_weight[zone.name] = 2
 
                         if zone.name == "start":
                             self.zone_weight[zone.name] = np.inf
 
-                        if zone.name == "goal":
-                            self.zone_weight[zone.name] = 0
+                if neighbour == "end":
+                    self.zone_weight["end"] = 1
 
-    def find_shortest(self, start: Zone) -> list[int]:
+    def find_shortest(self) -> dict[str, float]:
         """
         This is the algorithm that will be used
         to navigate the drones.
 
-        Parameter:
-        - start: Zone
-
         Return
-        -> list[int]
+        -> dict[str, float]
         """
         # Initialize every nodes value to infinity
-        dist: dict[str, int] = {node.name: np.inf
-                                for name, node in self.zones.items()}
+        dist: dict[str, float] = {}
+        for name, node in self.zones.items():
+            if node.name == "goal" or node.name == "impossible_goal":
+                dist["end"] = np.inf
+            else:
+                dist[node.name] = np.inf
         dist["start"] = 0
+
         visited_nodes: list[int] = []
 
         # Initialize a priority queue
@@ -73,10 +76,10 @@ class Dijkstra():
             # Checks the closest neighbour to the node
             for neighbour in self.zones[curr_node].neighbours:
                 for name, weight in self.zone_weight.items():
-                    if neighbour == name:
+                    if name == neighbour:
                         calc_dist = curr_dist + weight
                         if calc_dist < dist[neighbour]:
-                            dist[neighbour] = calc_dist
+                            dist.update({neighbour: calc_dist})
                             heappush(priority, (calc_dist, neighbour))
 
         return dist

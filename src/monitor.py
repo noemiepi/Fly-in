@@ -56,7 +56,6 @@ class Monitor():
                             self.visual_connections.append((from_coords,
                                                             to_coords))
 
-
     def _create_drones(self) -> None:
         """
         Creates and stocks every drones in dictionary.
@@ -99,25 +98,9 @@ class Monitor():
                     if key == "metadata":
                         metadata = value
 
-                self.zones["start"] = Zone(name, coords,
-                                           metadata,
-                                           self.connections)
-
-            # Creates and stocks the end hub in a dictionary
-            if zone == "end_hub":
-                for key, value in data.items():
-                    if key == "name":
-                        name = value
-
-                    if key == "coords":
-                        coords = value
-
-                    if key == "metadata":
-                        metadata = value
-
-                self.zones["end"] = Zone(name, coords,
-                                         metadata,
-                                         self.connections)
+                self.zones[name] = Zone(name, coords,
+                                        metadata,
+                                        self.connections)
 
             # Creates and stocks the hubs in a dictionary
             if zone == "hubs":
@@ -132,6 +115,22 @@ class Monitor():
                         if hub_id == "metadata":
                             metadata = value
 
-                    self.zones[hubs] = Zone(name, coords,
+                    self.zones[name] = Zone(name, coords,
                                             metadata,
                                             self.connections)
+
+            # Creates and stocks the end hub in a dictionary
+            if zone == "end_hub":
+                for key, value in data.items():
+                    if key == "name":
+                        name = value
+
+                    if key == "coords":
+                        coords = value
+
+                    if key == "metadata":
+                        metadata = value
+
+                self.zones["end"] = Zone(name, coords,
+                                        metadata,
+                                        self.connections)

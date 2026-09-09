@@ -37,6 +37,17 @@ class Zone():
                     if name in value:
                         steps: list[str] = value.split('-')
                         if steps[0] == name:
-                            self.neighbours.append(steps[1])
+                            if steps[1] == "goal" or \
+                            steps[1] == "impossible_goal":
+                                self.neighbours.append("end")
+
+                            else:
+                                self.neighbours.append(steps[1])
+
                         if steps[1] == name:
-                            self.neighbours.append(steps[0])
+                            if steps[0] == "goal" or \
+                            steps[0] == "impossible_goal":
+                                self.neighbours.append("end")
+
+                            else:
+                                self.neighbours.append(steps[0])

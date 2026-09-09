@@ -39,7 +39,7 @@ def main() -> None:
 
     # Starts the algorithm
     algo: Dijkstra = Dijkstra(monitor.zones)
-    print(algo.find_shortest(monitor.zones["start"]))
+    print(algo.find_shortest())
 
     # Visualizer
     visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)
