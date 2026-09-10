@@ -1,7 +1,7 @@
 from typing import Any
 
 from src.parsing.map_parse import MapParser
-from src.algorithm.dijkstra import Dijkstra
+from src.algorithm.dijkstra import Algorithm
 from src.ui.visual import Visualizer
 from src.ui.menu import UserMenu
 from src.monitor import Monitor
@@ -38,8 +38,8 @@ def main() -> None:
     monitor.create_level()
 
     # Starts the algorithm
-    algo: Dijkstra = Dijkstra(monitor.zones)
-    print(algo.find_shortest())
+    algo: Algorithm = Algorithm(monitor.zones)
+    print(algo.dijkstra())
 
     # Visualizer
     visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)

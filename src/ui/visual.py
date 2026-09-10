@@ -47,7 +47,6 @@ class Visualizer(arcade.Window):
         self.lvl_name = lvl_name
         self.monitor = monitor
 
-        self._load_sprites()
         self.setup()
 
     def setup(self) -> None:
@@ -64,6 +63,9 @@ class Visualizer(arcade.Window):
             arcade.shape_list.ShapeElementList()
         self.text_list: list[arcade.Text] = []
 
+        # Loads the text font
+        arcade.load_font(f"{FONT_PATH}MinecraftFont.woff")
+
         text = arcade.Text(text=self.lvl_name,
                            x=1300 / 2, y=850,
                            color=arcade.color.WHITE,
@@ -71,6 +73,7 @@ class Visualizer(arcade.Window):
                            font_name="Minecraft")
         self.text_list.append(text)
 
+        # Adapts the scale depending on the map size
         x_lst: list[int] = [data.x for data in self.monitor.zones.values()]
         y_lst: list[int] = [data.y for data in self.monitor.zones.values()]
         min_x, max_x = min(x_lst), max(x_lst)
@@ -85,8 +88,11 @@ class Visualizer(arcade.Window):
         spacing_y = avail_h / height_units if height_units else SPRITE_SIZE
 
         self.spacing: float | int = min(spacing_x, spacing_y, SPRITE_SIZE)
+        self.sprite_scale: float | int = min(SCALE, self.spacing / SPRITE_SIZE)
         self.center_gx: float = (min_x + max_x) / 2
         self.center_gy: float = (min_y + max_y) / 2
+
+        self._load_sprites()
 
         for zone, data in self.monitor.zones.items():
             x: float = ((WINDOW_WIDTH / 2) + (data.x - self.center_gx)
@@ -190,7 +196,7 @@ class Visualizer(arcade.Window):
         """
         if zone == "normal":
             normal: arcade.Sprite = arcade.Sprite(self.normal,
-                                                  scale=SCALE)
+                                                  scale=self.sprite_scale)
             normal.center_x = x
             normal.center_y = y + 10
 
@@ -205,7 +211,7 @@ class Visualizer(arcade.Window):
 
         if zone == "priority":
             priority: arcade.Sprite = arcade.Sprite(self.priority,
-                                                    scale=SCALE)
+                                                    scale=self.sprite_scale)
             priority.center_x = x
             priority.center_y = y + 20
 
@@ -220,7 +226,7 @@ class Visualizer(arcade.Window):
 
         if zone == "restricted":
             restricted: arcade.Sprite = arcade.Sprite(self.restricted,
-                                                      scale=SCALE * 0.75)
+                                                      scale=self.sprite_scale * 0.75)
             restricted.center_x = x
             restricted.center_y = y + 10
 
@@ -235,7 +241,7 @@ class Visualizer(arcade.Window):
 
         if zone == "blocked":
             blocked: arcade.Sprite = arcade.Sprite(self.blocked,
-                                                   scale=SCALE * 0.75)
+                                                   scale=self.sprite_scale * 0.75)
             blocked.center_x = x
             blocked.center_y = y + 10
 
@@ -297,7 +303,7 @@ class Visualizer(arcade.Window):
 
         for drones in self.monitor.drones:
             drone: arcade.Sprite = arcade.Sprite(self.drone,
-                                                 scale=SCALE * 0.15)
+                                                 scale=self.sprite_scale * 0.15)
             drone.center_x = x - random.randint(0, 10)
             drone.center_y = y + random.randint(0, 10)
 
@@ -321,9 +327,9 @@ class Visualizer(arcade.Window):
             # Creation of the different types of hubs
             self.start: arcade.Sprite = \
                 arcade.Sprite(f"{START_END_PATH}start.png",
-                              scale=SCALE)
+                              scale=self.sprite_scale)
             self.end: arcade.Sprite = arcade.Sprite(f"{START_END_PATH}end.png",
-                                                    scale=SCALE)
+                                                    scale=self.sprite_scale)
 
             self.normal: arcade.Texture = \
                 arcade.load_texture(f"{HUB_PATH}normal.png")
@@ -336,9 +342,6 @@ class Visualizer(arcade.Window):
 
             # Creation of a drone
             self.drone = arcade.load_texture(f"{DRONE_PATH}bee.png")
-
-            # Loads the text font
-            arcade.load_font(f"{FONT_PATH}MinecraftFont.woff")
 
         except FileNotFoundError:
             raise ValueError("Assets folder not found")

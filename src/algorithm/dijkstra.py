@@ -6,13 +6,14 @@ import numpy as np
 from src.objects.zone import Zone
 
 
-class Dijkstra():
+class Algorithm():
     """
-    This is the class for the algorithm that will be used
-    to navigate the drones.
+    This is the class for the algorithm and a scheduler 
+    that will be used to navigate the drones.
 
     Attributes:
-    - find_shortest(self, start: Zone) -> list[int]
+    - dijkstra(self) -> dict[str, float]
+    - scheduler(self) -> None
     """
     def __init__(self, zones: dict[str, Zone] = {}):
         self.zones = zones
@@ -40,7 +41,7 @@ class Dijkstra():
                 if neighbour == "end":
                     self.zone_weight["end"] = 1
 
-    def find_shortest(self) -> dict[str, float]:
+    def dijkstra(self) -> dict[str, float]:
         """
         This is the algorithm that will be used
         to navigate the drones.
@@ -83,3 +84,12 @@ class Dijkstra():
                             heappush(priority, (calc_dist, neighbour))
 
         return dist
+
+    def scheduler(self) -> None:
+        """
+        This is the scheduler that will give the priority
+        order when not every drone can go to a zone.
+
+        Return
+        -> dict[str, float]
+        """

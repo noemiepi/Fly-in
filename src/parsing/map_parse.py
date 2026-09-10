@@ -3,9 +3,6 @@ import glob
 
 from typing import Any
 
-r = "\033[31m\033[5m\033[1m"
-end = "\033[0m"
-
 
 class MapParser():
     """
@@ -89,6 +86,7 @@ class MapParser():
 
         j: int = 1
         k: int = 1
+        l: int = 0
 
         try:
             with open(file, "r") as f:
@@ -99,33 +97,33 @@ class MapParser():
                     if line.startswith("#") or not line:
                         continue
 
-                    key, value = line.split(":", 1)
+                    key, values = line.split(":", 1)
                     key = key.strip()
-                    value = value.strip()
+                    value = values.strip()
 
                     # Checks if the correct keywords are used
                     if key not in keyword:
-                        raise ValueError(f"{r}[ERROR]{end}: An invalid "
-                                         f"keyword is used (l.{i})")
+                        raise ValueError("An invalid keyword is used "
+                                         f"(l.{i})")
 
                     if first:
                         if key != "nb_drones":
-                            raise ValueError(f"{r}[ERROR]{end}: Number "
-                                             "of drones isn't the first "
-                                             f"parameter (l.{i})")
+                            raise ValueError("Number of drones isn't "
+                                             "the first parameter "
+                                             f"(l.{i})")
 
                         try:
                             nb_drone = int(value)
 
                         except ValueError:
-                            raise ValueError(f"{r}[ERROR]{end}: Invalid drone "
-                                             "number. It should be an integer"
+                            raise ValueError("Invalid drone number. "
+                                             "It should be an integer"
                                              f"(l.{i})")
 
                         if nb_drone <= 0:
-                            raise ValueError(f"{r}[ERROR]{end}: Invalid number"
-                                             " of drones (Needs to be above 0)"
-                                             f" (l.{i})")
+                            raise ValueError("Invalid number of drones "
+                                             "(Needs to be above 0) "
+                                             f"(l.{i})")
 
                         level_dict["nb_drones"] = nb_drone
                         first = False
@@ -135,22 +133,20 @@ class MapParser():
                         if key == "start_hub":
                             start_hub += 1
                             if start_hub > 1:
-                                raise ValueError(f"{r}[ERROR]{end}: Over one "
-                                                 "start_hub contain a dash "
+                                raise ValueError("Over one start_hub present"
                                                  f"(l.{i})")
 
                         if key == "end_hub":
                             end_hub += 1
                             if end_hub > 1:
-                                raise ValueError(f"{r}[ERROR]{end}: Over one "
-                                                 "end_hub contain a dash "
+                                raise ValueError("Over one end_hub present "
                                                  f"(l.{i})")
 
                         name = value.split(" ")[0]
                         if "-" in name or " " in name:
-                            raise ValueError(f"{r}[ERROR]{end}: {name} is an "
-                                             "invalid name. It shouldn't "
-                                             f"contain a dash (l.{i})")
+                            raise ValueError(f"{name} is an invalid name. "
+                                             "It shouldn't contain a dash "
+                                             f"(l.{i})")
 
                         x = value.split(" ")[1]
                         y = value.split(" ")[2]
@@ -159,9 +155,9 @@ class MapParser():
                             ny = int(y)
 
                         except ValueError:
-                            raise ValueError(f"{r}[ERROR]{end}: Invalid "
-                                             "given coordinates. They "
-                                             f"should be integers (l.{i})")
+                            raise ValueError("Invalid given coordinates. "
+                                             "They should be integers "
+                                             f"(l.{i})")
 
                         metadata = re.findall(r'\[(.+)\]', value)
                         if metadata:
@@ -170,8 +166,7 @@ class MapParser():
                                 meta_keyword: str = meta.split("=")[0]
                                 if meta_keyword not in ["zone", "color",
                                                         "max_drones"]:
-                                    raise ValueError(f"{r}[ERROR]{end}: "
-                                                     "Invalid given keyword "
+                                    raise ValueError("Invalid given keyword "
                                                      "for the metadata "
                                                      f"(l.{i})")
 
@@ -182,8 +177,7 @@ class MapParser():
                                                           "blocked",
                                                           "restricted",
                                                           "priority"]:
-                                        raise ValueError(f"{r}[ERROR]{end}: "
-                                                         "Invalid value "
+                                        raise ValueError("Invalid value "
                                                          "for the zone "
                                                          f"(l.{i})")
                                     zone = meta_value
@@ -191,8 +185,7 @@ class MapParser():
                                 if meta_keyword == "color":
                                     if " " in meta_value or "-" in meta_value \
                                      or "_" in meta_value:
-                                        raise ValueError(f"{r}[ERROR]{end}: "
-                                                         "Invalid color name "
+                                        raise ValueError("Invalid color name "
                                                          f"(l.{i})")
                                     color = meta_value
 
@@ -201,15 +194,13 @@ class MapParser():
                                         nb_drone = int(meta_value)
 
                                     except ValueError:
-                                        raise ValueError(f"{r}[ERROR]{end}: "
-                                                         "Invalid drone "
+                                        raise ValueError("Invalid drone "
                                                          "number. It should "
                                                          "be an integers"
                                                          f"(l.{i})")
 
                                     if nb_drone <= 0:
-                                        raise ValueError(f"{r}[ERROR]{end}: "
-                                                         "Invalid number of "
+                                        raise ValueError("Invalid number of "
                                                          "drones (Needs to be"
                                                          f" above 0) (l.{i})")
 
@@ -254,6 +245,10 @@ class MapParser():
 
                     # Checks the connections and their validity
                     if key == "connection":
+                        # print(i)
+                        if l == 0:
+                            l = i - 1
+
                         if "-" in value:
                             path: str = value.split(" ")[0]
 
@@ -263,8 +258,7 @@ class MapParser():
                                 for meta in meta_name:
                                     meta_keyword = meta.split("=")[0]
                                     if meta_keyword != "max_link_capacity":
-                                        raise ValueError(f"{r}[ERROR]{end}: "
-                                                         "Invalid metadata "
+                                        raise ValueError("Invalid metadata "
                                                          f"keyword (l.{i})")
 
                                     meta_value = meta.split("=")[1]
@@ -273,15 +267,13 @@ class MapParser():
                                         nb_drone = int(meta_value)
 
                                     except ValueError:
-                                        raise ValueError(f"{r}[ERROR]{end}: "
-                                                         "Invalid drone "
+                                        raise ValueError("Invalid drone "
                                                          "number. It should "
                                                          "be an integers"
                                                          f"(l.{i})")
 
                                     if nb_drone <= 0:
-                                        raise ValueError(f"{r}[ERROR]{end}: "
-                                                         "Invalid number of "
+                                        raise ValueError("Invalid number of "
                                                          "drones (Needs to "
                                                          "be above 0)"
                                                          f"(l.{i})")
@@ -294,6 +286,23 @@ class MapParser():
                                              {"path": path,
                                               "nb_drones": nb_drone}})
                         k += 1
+            
+            for connect1, info1 in connect_dict.items():
+                for info_key1, info_value1 in info1.items():
+                    if info_key1 == "path":
+                        steps1: list[str] = info_value1.split("-")
+                        
+                        for connect2, info2 in connect_dict.items():
+                            for info_key2, info_value2 in info2.items():
+                                if info_key2 == "path":
+                                    steps2: list[str] = info_value2.split("-")
+
+                                    if steps1[0] == steps2[1] and \
+                                    steps1[1] == steps2[0]:
+                                        raise ValueError ("Duplicate "
+                                                          "connection "
+                                                          f"(l.{l})")
+                    l += 1
 
             # Adds the zones and their connections to the level's dictionary
             level_dict["hubs"] = hub_dict
@@ -307,10 +316,9 @@ class MapParser():
                 raise ValueError("No end_hub detected")
 
         except FileNotFoundError:
-            raise ValueError(f"{r}[ERROR]{end}: File not found")
+            raise ValueError("File not found")
 
         except PermissionError:
-            raise ValueError(f"{r}[ERROR]{end}: Lack permission to "
-                             "open the file")
+            raise ValueError("Lack permission to open the file")
 
         return (True, level_dict)

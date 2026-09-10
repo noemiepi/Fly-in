@@ -81,7 +81,7 @@ class UserMenu():
                 print(f"\n{r}[ERROR]{end}: Invalid choice! "
                       "Please select a number between 1 and 6")
                 time.sleep(1)
-                self.home_menu()
+                return self.home_menu()
 
             elif choice == 1:
                 os.system('clear')
@@ -106,17 +106,18 @@ class UserMenu():
             elif choice == 6:
                 print("\n             Exiting the program...")
                 print("                 Goodbye! :D")
+                exit()
+
+            return map_data
 
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
             time.sleep(1)
-            self.home_menu()
+            return self.home_menu()
 
         except Exception as e:
             os.system('clear')
             print(f"\n{e}")
-
-        return map_data
 
     def easy_maps(self) -> Any:
         """
@@ -171,11 +172,11 @@ class UserMenu():
                 print(f"\n{r}[ERROR]{end}: Invalid choice! "
                       f"Please select a number between 1 and {i}")
                 time.sleep(1)
-                self.home_menu()
+                return self.home_menu()
 
             elif choice == i:
                 os.system('clear')
-                self.home_menu()
+                return self.home_menu()
 
             else:
                 for folder, maps in self.maps_dict.items():
@@ -188,7 +189,7 @@ class UserMenu():
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
             time.sleep(1)
-            self.home_menu()
+            return self.home_menu()
 
         except Exception as e:
             os.system('clear')
@@ -247,11 +248,11 @@ class UserMenu():
                 print(f"\n{r}[ERROR]{end}: Invalid choice! "
                       f"Please select a number between 1 and {i}")
                 time.sleep(1)
-                self.home_menu()
+                return self.home_menu()
 
             elif choice == i:
                 os.system('clear')
-                self.home_menu()
+                return self.home_menu()
 
             else:
                 for folder, maps in self.maps_dict.items():
@@ -264,7 +265,7 @@ class UserMenu():
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
             time.sleep(1)
-            self.home_menu()
+            return self.home_menu()
 
         except Exception as e:
             os.system('clear')
@@ -323,11 +324,11 @@ class UserMenu():
                 print(f"\n{r}[ERROR]{end}: Invalid choice! "
                       f"Please select a number between 1 and {i}")
                 time.sleep(1)
-                self.home_menu()
+                return self.home_menu()
 
             elif choice == i:
                 os.system('clear')
-                self.home_menu()
+                return self.home_menu()
 
             else:
                 for folder, maps in self.maps_dict.items():
@@ -340,7 +341,7 @@ class UserMenu():
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
             time.sleep(1)
-            self.home_menu()
+            return self.home_menu()
 
         except Exception as e:
             os.system('clear')
@@ -399,11 +400,11 @@ class UserMenu():
                 print(f"\n{r}[ERROR]{end}: Invalid choice! "
                       f"Please select a number between 1 and {i}")
                 time.sleep(1)
-                self.home_menu()
+                return self.home_menu()
 
             elif choice == i:
                 os.system('clear')
-                self.home_menu()
+                return self.home_menu()
 
             else:
                 for folder, maps in self.maps_dict.items():
@@ -416,7 +417,7 @@ class UserMenu():
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
             time.sleep(1)
-            self.home_menu()
+            return self.home_menu()
 
         except Exception as e:
             os.system('clear')
@@ -475,11 +476,11 @@ class UserMenu():
                 print(f"\n{r}[ERROR]{end}: Invalid choice! "
                       f"Please select a number between 1 and {i}")
                 time.sleep(1)
-                self.home_menu()
+                return self.home_menu()
 
             elif choice == i:
                 os.system('clear')
-                self.home_menu()
+                return self.home_menu()
 
             else:
                 for folder, maps in self.maps_dict.items():
@@ -492,7 +493,7 @@ class UserMenu():
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
             time.sleep(1)
-            self.home_menu()
+            return self.home_menu()
 
         except Exception as e:
             os.system('clear')
