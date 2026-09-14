@@ -34,8 +34,8 @@ class Monitor():
             if hub == "connections":
                 self.connections = data
 
-        self._create_drones()
         self._create_zones()
+        self._create_drones()
 
         for hub, data in self.level.items():
             if hub == "connections":
@@ -55,6 +55,14 @@ class Monitor():
 
                             self.visual_connections.append((from_coords,
                                                             to_coords))
+
+        # Gives the start point of the drones
+        for name, zone in self.zones.items():
+            if zone.name == "start":
+                start: Zone = zone
+
+        for name, drone in self.drones.items():
+            drone.next_position(start)
 
     def _create_drones(self) -> None:
         """
@@ -132,5 +140,5 @@ class Monitor():
                         metadata = value
 
                 self.zones["end"] = Zone(name, coords,
-                                        metadata,
-                                        self.connections)
+                                         metadata,
+                                         self.connections)

@@ -5,31 +5,140 @@
 </div>
 
 ## Description
-*insert description*
+The goal of this project is to design a system that efficiently routes a fleet of drones from a starting point to an end point, all while following of the different types of zones.</br>
+To successfully do so, we need to choose an adapted pathfinding algorithm to move the drones across the given maps.
 
 ## Instructions
 With these commands, once entered inside the terminal, the program will be able to run.
 ``` bash
+# Both commands run the program after installing the necessary dependencies
 make
-or
-uv run python -m src # Both run the program after installing the necessary dependencies
 
+uv run python -m src
+---
 python3 -m src # Runs the program
 ```
 
+And below, you will find other commands:
+| Command | Description |
+| :---: | --- |
+| `make install` | Install the project's dependencies |
+| `make run` | Execute the program (like the `make` command) |
+| `make debug` | Run the script using the Python built-in debugger |
+| `make clean` | Remove temporary files and caches |
+| `make lint` | Execute the `flake8` and `mypy` commands |
+| `make lint-strict` | Execute the `flake8` and a stricter version of `mypy` commands |
+
+## Usage Example
+Files containing the maps' data are given in this format:
+```txt
+nb_drones: 5
+
+start_hub: hub 0 0 [color=green]
+end_hub: goal 10 10 [color=yellow]
+hub: roof1 3 4 [zone=restricted color=red]
+hub: roof2 6 2 [zone=normal color=blue]
+hub: corridorA 4 3 [zone=priority color=green max_drones=2]
+hub: tunnelB 7 4 [zone=normal color=red]
+hub: obstacleX 5 5 [zone=blocked color=gray]
+
+connection: hub-roof1
+connection: hub-corridorA
+connection: roof1-roof2
+connection: roof2-goal
+connection: corridorA-tunnelB [max_link_capacity=2]
+connection: tunnelB-goa
+```
+In these files, there will always be:
+- nb_drones: `<number>`, as the first line</br></br>
+- start_hub: `<name>` `<x>` `<y>` [metadata]
+- end_hub: `<name>` `<x>` `<y>` [metadata]
+- hub: `<name>` `<x>` `<y>` [metadata]</br>
+For the different hubs (start, end and regulars), the metadata can be:
+  - `zone=<type>` (default: **normal**) there are 4 types
+  - `color=<value>` (default: **none**) can be any one word color
+  - `max_drones=<number>` (default: **1**) it's the maximum drones that can occupy this zone simultaneously</br>
+  The zones have different types:
+    - `normal` - a standard zone that costs 1 to move
+    - `blocked` - an inaccessible zone
+    - `restricted` - a zone that costs 2 to move
+    - `priority` - a preferred zone that costs 1 to move
+- connection: `<name1>-<name2>` [metadata]</br>
+For the connections, the metadata consists of:
+  - `max_link_capacity=<number>` (default: **1**) it's the maximum number of drones that can traverse this connection simultaneously</br>
+
+For this project, two outputs were made, one of them being mandatory.</br>
+For the mandatory visual, here is the template shown below:
+```bash
+D<ID> # Refers to the drone (D1, D2)
+
+<zone> # Name of the destination zone
+
+<connection> # Name of the connection towards a restricted zone
+
+# Each movement needs to be defined as such
+D<ID>-<zone>
+
+D<ID>-<connection>
+```
+
+Below is an example of the usage of this format:
+```bash
+D1-roof1 D2-corridorA
+D1-roof2 D2-tunnelB
+D1-goal D2-goal
+```
+
 ## Algorithm Explanation
+### Algorithm Choice
+During my research for a path-finding algorithm, two of them caught my attention: <b>A*</b> and **Dijkstra**.
+To determine which one to choose I looked for the pros and cons of these two algorithms for this project.
+
+<table>
+  <tr>
+    <td>&nbsp;</td>
+    <th>&emsp;Dijkstra</th>
+    <th>&emsp;A*</th>
+  </tr>
+  <tr>
+    <th>Pros</th>
+    <td>Much documentation, a classic and well-known algorithm</td>
+    <td>Great when efficient navigation is required</td>
+  </tr>
+  <tr>
+    <th>Cons</th>
+    <td>-</td>
+    <td>Uses coordinates (not ideal for this project as the zones have coordinates)</td>
+  </tr>
+</table>
+
+For the reasons listed above, the Dijkstra algorithm is chosen to move the drones in this project.
+
+### How does it work?
+Dijkstra uses a table to keep track of every node possible.</br>
+It starts by assigning a distance of 0 to the start node and every other node's values are equal to infinity. Then it chooses an unvisited node with the shortest distance and calculates the distance from the start node to this node. If the distance is shorter than the current distance, it is updated.</br>
+Below is a schema to give a visual representation of the algorithm:
+
+<img src="assets/README/dijkstra.gif" />
+
+The nodes are marked in red once the algorithm has visited each neighbour of the node.
+
+### Implementation Strategy
 *A detailed description of your algorithm choices and implementation strategy must also be included*
 
 ## Visualization
-*Documentation of the visual representation features and how they enhance the user experience.*
+When starting the program, the user gets on the main menu to choose the difficulty and then the map, as shown below:</br>
+<img src="assets/README/main_menu.png" />
 
-## Usage Example
-*Example input and expected output demonstrating the program’s functionality.*
+Once the map is chosen, a visual representation of the movements of the drones through it will start:
+*example image*
+
+*Documentation of the visual representation features and how they enhance the user experience.*
 
 ## Resources
 ### Notions
 #### Path Finding Algorithms
-- [Differnt Path Finding Algorithms](https://graphable.ai/blog/pathfinding-algorithms/)
+- [Different Path Finding Algorithms](https://graphable.ai/blog/pathfinding-algorithms/)
 
 #### Dijkstra Algorithm
 - [Mathematical Approach](https://www.maths-cours.fr/methode/algorithme-de-dijkstra-etape-par-etape/)
@@ -45,4 +154,4 @@ python3 -m src # Runs the program
 - [Arcade Library](https://api.arcade.academy/en/stable/)
 
 ### GitHub
--
+- [Overtekk](https://github.com/Overtekk/Fly-in)

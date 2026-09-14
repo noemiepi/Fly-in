@@ -38,7 +38,7 @@ class Zone():
                         steps: list[str] = value.split('-')
                         if steps[0] == name:
                             if steps[1] == "goal" or \
-                            steps[1] == "impossible_goal":
+                               steps[1] == "impossible_goal":
                                 self.neighbours.append("end")
 
                             else:
@@ -46,7 +46,7 @@ class Zone():
 
                         if steps[1] == name:
                             if steps[0] == "goal" or \
-                            steps[0] == "impossible_goal":
+                               steps[0] == "impossible_goal":
                                 self.neighbours.append("end")
 
                             else:

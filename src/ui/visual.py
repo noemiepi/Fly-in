@@ -3,6 +3,7 @@ import arcade
 import random
 
 from src.monitor import Monitor
+from src.ui.utils.icon import Icon
 
 # --- CONSTANTS --- #
 WINDOW_WIDTH = 1300
@@ -61,6 +62,9 @@ class Visualizer(arcade.Window):
         self.connection_list: (arcade.shape_list.
                                ShapeElementList[arcade.shape_list.Shape]) = \
             arcade.shape_list.ShapeElementList()
+
+        self.legend_list: arcade.SpriteList[arcade.Sprite] = \
+            arcade.SpriteList()
         self.text_list: list[arcade.Text] = []
 
         # Loads the text font
@@ -93,6 +97,31 @@ class Visualizer(arcade.Window):
         self.center_gy: float = (min_y + max_y) / 2
 
         self._load_sprites()
+
+        # Creates the legend
+        legend_sprite: dict[str, arcade.Sprite] = {
+            "Start": f"{START_END_PATH}start.png",
+            "End": f"{START_END_PATH}end.png",
+            "Normal Zone": self.normal,
+            "Blocked Zone": self.blocked,
+            "Priority Zone": self.priority,
+            "Restricted Zone": self.restricted
+            }
+
+        legend_x = WINDOW_WIDTH - 200
+        legend_y = 300
+
+        for name, sprite in legend_sprite.items():
+            icon = Icon(sprite, 0.2, name)
+
+            icon.center_x = legend_x
+            icon.center_y = legend_y
+            icon.legend_label.x = legend_x + 15
+            icon.legend_label.y = legend_y - 5
+
+            self.legend_list.append(icon)
+
+            legend_y -= 50
 
         for zone, data in self.monitor.zones.items():
             x: float = ((WINDOW_WIDTH / 2) + (data.x - self.center_gx)
@@ -146,9 +175,13 @@ class Visualizer(arcade.Window):
         #                                      WINDOW_WIDTH,
         #                                      WINDOW_HEIGHT))
 
-        # Draws the selected map
+        # Draws the selected map and the legend
         self.connection_list.draw()
         self.zone_list.draw()
+        self.legend_list.draw()
+
+        for sprite in self.legend_list:
+            sprite
 
         # Draws the drones
         self.drone_list.draw()
@@ -226,7 +259,8 @@ class Visualizer(arcade.Window):
 
         if zone == "restricted":
             restricted: arcade.Sprite = arcade.Sprite(self.restricted,
-                                                      scale=self.sprite_scale * 0.75)
+                                                      scale=(self.sprite_scale
+                                                             * 0.75))
             restricted.center_x = x
             restricted.center_y = y + 10
 
@@ -241,7 +275,8 @@ class Visualizer(arcade.Window):
 
         if zone == "blocked":
             blocked: arcade.Sprite = arcade.Sprite(self.blocked,
-                                                   scale=self.sprite_scale * 0.75)
+                                                   scale=(self.sprite_scale
+                                                          * 0.75))
             blocked.center_x = x
             blocked.center_y = y + 10
 
@@ -303,7 +338,8 @@ class Visualizer(arcade.Window):
 
         for drones in self.monitor.drones:
             drone: arcade.Sprite = arcade.Sprite(self.drone,
-                                                 scale=self.sprite_scale * 0.15)
+                                                 scale=(self.sprite_scale
+                                                        * 0.15))
             drone.center_x = x - random.randint(0, 10)
             drone.center_y = y + random.randint(0, 10)
 

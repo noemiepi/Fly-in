@@ -86,7 +86,7 @@ class MapParser():
 
         j: int = 1
         k: int = 1
-        l: int = 0
+        i_bis: int = 0
 
         try:
             with open(file, "r") as f:
@@ -246,8 +246,8 @@ class MapParser():
                     # Checks the connections and their validity
                     if key == "connection":
                         # print(i)
-                        if l == 0:
-                            l = i - 1
+                        if i_bis == 0:
+                            i_bis = i - 1
 
                         if "-" in value:
                             path: str = value.split(" ")[0]
@@ -286,23 +286,23 @@ class MapParser():
                                              {"path": path,
                                               "nb_drones": nb_drone}})
                         k += 1
-            
+
             for connect1, info1 in connect_dict.items():
                 for info_key1, info_value1 in info1.items():
                     if info_key1 == "path":
                         steps1: list[str] = info_value1.split("-")
-                        
+
                         for connect2, info2 in connect_dict.items():
                             for info_key2, info_value2 in info2.items():
                                 if info_key2 == "path":
                                     steps2: list[str] = info_value2.split("-")
 
                                     if steps1[0] == steps2[1] and \
-                                    steps1[1] == steps2[0]:
-                                        raise ValueError ("Duplicate "
-                                                          "connection "
-                                                          f"(l.{l})")
-                    l += 1
+                                       steps1[1] == steps2[0]:
+                                        raise ValueError("Duplicate "
+                                                         "connection "
+                                                         f"(l.{i_bis})")
+                    i_bis += 1
 
             # Adds the zones and their connections to the level's dictionary
             level_dict["hubs"] = hub_dict

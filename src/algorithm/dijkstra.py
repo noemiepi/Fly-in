@@ -8,14 +8,14 @@ from src.objects.zone import Zone
 
 class Algorithm():
     """
-    This is the class for the algorithm and a scheduler 
+    This is the class for the algorithm and a scheduler
     that will be used to navigate the drones.
 
     Attributes:
     - dijkstra(self) -> dict[str, float]
     - scheduler(self) -> None
     """
-    def __init__(self, zones: dict[str, Zone] = {}):
+    def __init__(self, zones: dict[str, Zone]) -> None:
         self.zones = zones
         self.zone_weight: dict[str, float] = {}
 
@@ -84,12 +84,3 @@ class Algorithm():
                             heappush(priority, (calc_dist, neighbour))
 
         return dist
-
-    def scheduler(self) -> None:
-        """
-        This is the scheduler that will give the priority
-        order when not every drone can go to a zone.
-
-        Return
-        -> dict[str, float]
-        """

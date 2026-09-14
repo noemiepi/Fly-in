@@ -108,8 +108,6 @@ class UserMenu():
                 print("                 Goodbye! :D")
                 exit()
 
-            return map_data
-
         except ValueError:
             print(f"\n{r}[ERROR]{end}: You didn't enter an int")
             time.sleep(1)
@@ -118,6 +116,8 @@ class UserMenu():
         except Exception as e:
             os.system('clear')
             print(f"\n{e}")
+
+        return map_data
 
     def easy_maps(self) -> Any:
         """

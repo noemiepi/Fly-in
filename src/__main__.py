@@ -39,7 +39,7 @@ def main() -> None:
 
     # Starts the algorithm
     algo: Algorithm = Algorithm(monitor.zones)
-    print(algo.dijkstra())
+    path_cost: dict[str, float] = algo.dijkstra()
 
     # Visualizer
     visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)
