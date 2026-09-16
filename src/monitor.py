@@ -2,6 +2,7 @@ from typing import Any
 
 from src.objects.drone import Drone
 from src.objects.zone import Zone
+from src.algorithm.dijkstra import Algorithm
 
 
 class Monitor():
@@ -22,6 +23,8 @@ class Monitor():
         self.connections: dict[str, Any] = {}
 
         self.visual_connections: list[tuple[Any, Any]] = []
+
+        self.turn: int = 0
 
     def create_level(self) -> None:
         """
@@ -63,6 +66,25 @@ class Monitor():
 
         for name, drone in self.drones.items():
             drone.next_position(start)
+
+    # def simulate(self) -> None:
+    #     algo: Algorithm = Algorithm(self.zones)
+    #     path_cost = algo.dijkstra()
+
+    #     self.turn += 1
+
+    #     for drone_name, drone_obj in self.drones.items():
+    #         if drone_obj.has_finished:
+    #             continue
+
+    #         drone_pos = drone_obj.get_position()
+    #         score: float = float('-inf')
+    #         if drone_pos:
+    #             for neighbors in self.zones[drone_pos].neighbours:
+    #                 if path_cost[neighbors] > score:
+    #                     score = path_cost[neighbors]
+
+    #             drone_obj.next_position()
 
     def _create_drones(self) -> None:
         """

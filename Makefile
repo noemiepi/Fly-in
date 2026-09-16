@@ -17,7 +17,7 @@ MYPY_FLAGS=--warn-return-any --warn-unused-ignores --ignore-missing-imports \
 #       Rules       #
 # ----------------- #
 
-.PHONY: all install run debug clean lint lint-strict
+.PHONY: all install run debug clean lint lint-strict lint-format
 
 
 all: install run
@@ -70,6 +70,8 @@ lint-strict:
 	$(MYPY) src/ $(MYPY_FLAGS) --strict || status=$$?; \
 	exit $$status
 
+lint-format:
+				uv run ruff format
 
 # ----------------- #
 #       Colors      #

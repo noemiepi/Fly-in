@@ -4,6 +4,7 @@ import random
 
 from src.monitor import Monitor
 from src.ui.utils.icon import Icon
+from src.ui.utils.color import Color
 
 # --- CONSTANTS --- #
 WINDOW_WIDTH = 1300
@@ -49,6 +50,7 @@ class Visualizer(arcade.Window):
         self.monitor = monitor
 
         self.setup()
+        self._is_sim_started: bool = False
 
     def setup(self) -> None:
         """
@@ -99,6 +101,7 @@ class Visualizer(arcade.Window):
         self._load_sprites()
 
         # Creates the legend
+        count: int = 1
         legend_sprite: dict[str, arcade.Sprite] = {
             "Start": f"{START_END_PATH}start.png",
             "End": f"{START_END_PATH}end.png",
@@ -108,20 +111,28 @@ class Visualizer(arcade.Window):
             "Restricted Zone": self.restricted
             }
 
-        legend_x = WINDOW_WIDTH - 200
-        legend_y = 300
+        legend_x = WINDOW_WIDTH - 375
+        legend_y = 140
 
         for name, sprite in legend_sprite.items():
-            icon = Icon(sprite, 0.2, name)
+            if count == 4:
+                legend_x = WINDOW_WIDTH - 200
+                legend_y = 140
+
+            icon = Icon(sprite, 0.175, name)
 
             icon.center_x = legend_x
             icon.center_y = legend_y
-            icon.legend_label.x = legend_x + 15
+            icon.legend_label.x = legend_x + 30
             icon.legend_label.y = legend_y - 5
 
             self.legend_list.append(icon)
 
             legend_y -= 50
+
+            count += 1
+
+        # Builds the zones and their connections
 
         for zone, data in self.monitor.zones.items():
             x: float = ((WINDOW_WIDTH / 2) + (data.x - self.center_gx)
@@ -136,7 +147,7 @@ class Visualizer(arcade.Window):
 
                 text = arcade.Text(text=data.name,
                                    x=x, y=y - 60,
-                                   color=arcade.color.WHITE,
+                                   color=Color.get_color(data.color),
                                    font_size=13, anchor_x="center",
                                    font_name="Minecraft")
                 self.text_list.append(text)
@@ -150,13 +161,13 @@ class Visualizer(arcade.Window):
 
                 text = arcade.Text(text=data.name,
                                    x=x, y=y - 90,
-                                   color=arcade.color.WHITE,
+                                   color=Color.get_color(data.color),
                                    font_size=13, anchor_x="center",
                                    font_name="Minecraft")
                 self.text_list.append(text)
 
             else:
-                self._build_zone(data.name, data.zone, x, y)
+                self._build_zone(data.name, data.zone, data.color, x, y)
 
         self._build_connections()
 
@@ -180,8 +191,8 @@ class Visualizer(arcade.Window):
         self.zone_list.draw()
         self.legend_list.draw()
 
-        for sprite in self.legend_list:
-            sprite
+        for icon in self.legend_list:
+            icon.draw_text()
 
         # Draws the drones
         self.drone_list.draw()
@@ -189,6 +200,10 @@ class Visualizer(arcade.Window):
         # Prints the zone and level name in the window
         for text in self.text_list:
             text.draw()
+
+    def on_update(self, delta_time) -> None:
+        if self._is_sim_started:
+            self.monitor.simulate()
 
     def start_visual(self) -> None:
         """
@@ -214,13 +229,19 @@ class Visualizer(arcade.Window):
             print("Closing the visual!")
             arcade.exit()
 
-    def _build_zone(self, name: str, zone: str, x: float, y: float) -> None:
+        if key == arcade.key.SPACE and self._is_sim_started is not True:
+            print("Starting simulation")
+            self._is_sim_started = True
+
+    def _build_zone(self, name: str, zone: str, color: str,
+                    x: float, y: float) -> None:
         """
         Builds the different zones and display their name below.
 
         Parameters:
           - name: str
           - zone: str
+          - color: str
           - x: float
           - y: float
 
@@ -237,7 +258,7 @@ class Visualizer(arcade.Window):
 
             text = arcade.Text(text=name,
                                x=x, y=y - 65,
-                               color=arcade.color.WHITE,
+                               color=Color.get_color(color),
                                font_size=13, anchor_x="center",
                                font_name="Minecraft")
             self.text_list.append(text)
@@ -252,7 +273,7 @@ class Visualizer(arcade.Window):
 
             text = arcade.Text(text=name,
                                x=x, y=y - 55,
-                               color=arcade.color.WHITE,
+                               color=Color.get_color(color),
                                font_size=13, anchor_x="center",
                                font_name="Minecraft")
             self.text_list.append(text)
@@ -268,7 +289,7 @@ class Visualizer(arcade.Window):
 
             text = arcade.Text(text=name,
                                x=x, y=y - 100,
-                               color=arcade.color.WHITE,
+                               color=Color.get_color(color),
                                font_size=13, anchor_x="center",
                                font_name="Minecraft")
             self.text_list.append(text)
@@ -284,7 +305,7 @@ class Visualizer(arcade.Window):
 
             text = arcade.Text(text=name,
                                x=x, y=y - 90,
-                               color=arcade.color.WHITE,
+                               color=Color.get_color(color),
                                font_size=13, anchor_x="center",
                                font_name="Minecraft")
             self.text_list.append(text)

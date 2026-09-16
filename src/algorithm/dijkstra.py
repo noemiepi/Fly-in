@@ -51,6 +51,8 @@ class Algorithm():
         """
         # Initialize every nodes value to infinity
         dist: dict[str, float] = {}
+        predecessors: dict[str, Any] = {}
+
         for name, node in self.zones.items():
             if node.name == "goal" or node.name == "impossible_goal":
                 dist["end"] = np.inf
@@ -81,6 +83,9 @@ class Algorithm():
                         calc_dist = curr_dist + weight
                         if calc_dist < dist[neighbour]:
                             dist.update({neighbour: calc_dist})
+                            predecessors[neighbour] = curr_node
                             heappush(priority, (calc_dist, neighbour))
+
+        # Searches the quickest route from the start to the end
 
         return dist

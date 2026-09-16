@@ -1,7 +1,6 @@
 from typing import Any
 
 from src.parsing.map_parse import MapParser
-from src.algorithm.dijkstra import Algorithm
 from src.ui.visual import Visualizer
 from src.ui.menu import UserMenu
 from src.monitor import Monitor
@@ -36,10 +35,6 @@ def main() -> None:
     # Map monitor
     monitor: Monitor = Monitor(map_data)
     monitor.create_level()
-
-    # Starts the algorithm
-    algo: Algorithm = Algorithm(monitor.zones)
-    path_cost: dict[str, float] = algo.dijkstra()
 
     # Visualizer
     visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)

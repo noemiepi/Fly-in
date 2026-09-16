@@ -10,6 +10,7 @@ class Drone():
 
         self.curr_pos: str | None = None
         self.visited_zones: list[str] = []
+        self.has_finished: bool = False
 
     def get_position(self) -> str | None:
         return self.curr_pos
