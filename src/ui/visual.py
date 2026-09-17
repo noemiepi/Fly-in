@@ -1,6 +1,7 @@
 import os
 import arcade
 import random
+import math
 
 from src.monitor import Monitor
 from src.ui.utils.icon import Icon
@@ -22,6 +23,7 @@ FONT_PATH = "assets/font/"
 SCALE = 0.5
 SPRITE_SIZE = 256
 MARGIN = 150
+DRONE_SPEED = 100
 # ----------------- #
 
 
@@ -51,13 +53,11 @@ class Visualizer(arcade.Window):
 
         self.setup()
         self._is_sim_started: bool = False
+        self._is_moving: bool = False
 
     def setup(self) -> None:
         """
         Initializes the visual.
-
-        Return
-            -> None
         """
         self.zone_list: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
         self.drone_list: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
@@ -102,7 +102,7 @@ class Visualizer(arcade.Window):
 
         # Creates the legend
         count: int = 1
-        legend_sprite: dict[str, arcade.Sprite] = {
+        legend_sprite: dict[str, arcade.Texture | str] = {
             "Start": f"{START_END_PATH}start.png",
             "End": f"{START_END_PATH}end.png",
             "Normal Zone": self.normal,
@@ -174,9 +174,6 @@ class Visualizer(arcade.Window):
     def on_draw(self) -> None:
         """
         Renders the screen.
-
-        Return
-            -> None
         """
         self.clear()
 
@@ -201,16 +198,23 @@ class Visualizer(arcade.Window):
         for text in self.text_list:
             text.draw()
 
-    def on_update(self, delta_time) -> None:
-        if self._is_sim_started:
+    def on_update(self, delta_time: float) -> None:
+        """
+        Advances the simulation and animates the drones.
+
+        Parameters:
+        - delta_time: float
+        """
+        if self._is_sim_started and not self._is_moving:
             self.monitor.simulate()
+            self._start_drone_movement()
+
+        if self._is_moving:
+            self._move_drones(delta_time)
 
     def start_visual(self) -> None:
         """
         Starts the arcade visual.
-
-        Return
-            -> None
         """
         arcade.run()
 
@@ -221,9 +225,6 @@ class Visualizer(arcade.Window):
         Parameters:
           - key: int
           - _modifiers: int
-
-        Return
-            -> None
         """
         if key == arcade.key.ESCAPE:
             print("Closing the visual!")
@@ -244,9 +245,6 @@ class Visualizer(arcade.Window):
           - color: str
           - x: float
           - y: float
-
-        Return
-            -> None
         """
         if zone == "normal":
             normal: arcade.Sprite = arcade.Sprite(self.normal,
@@ -313,9 +311,6 @@ class Visualizer(arcade.Window):
     def _build_connections(self) -> None:
         """
         Builds the different connections between the zones.
-
-        Return
-            -> None
         """
         from_p: tuple[int, int]
         to_p: tuple[int, int]
@@ -352,12 +347,10 @@ class Visualizer(arcade.Window):
         Parameters:
           - x: float
           - y: float
-
-        Return
-            -> None
         """
+        self.drone_sprites: dict[str, arcade.Sprite] = {}
 
-        for drones in self.monitor.drones:
+        for drone_name, drone_obj in self.monitor.drones.items():
             drone: arcade.Sprite = arcade.Sprite(self.drone,
                                                  scale=(self.sprite_scale
                                                         * 0.15))
@@ -365,13 +358,11 @@ class Visualizer(arcade.Window):
             drone.center_y = y + random.randint(0, 10)
 
             self.drone_list.append(drone)
+            self.drone_sprites[drone_name] = drone
 
     def _load_sprites(self) -> None:
         """
         Loads the necessary sprites.
-
-        Return
-            -> None
         """
         try:
             if not os.path.exists("assets/"):
@@ -402,3 +393,74 @@ class Visualizer(arcade.Window):
 
         except FileNotFoundError:
             raise ValueError("Assets folder not found")
+
+    def _start_drone_movement(self) -> None:
+        """
+        Sets the pixel target of every drone sprite based on
+        the zone the drone is now heading to.
+        """
+        any_moving: bool = False
+
+        for drone_name, drone_obj in self.monitor.drones.items():
+            if drone_obj.has_finished:
+                continue
+
+            sprite = self.drone_sprites.get(drone_name)
+            if sprite is None:
+                continue
+
+            target_name = drone_obj.get_position()
+            if target_name is None:
+                continue
+
+            # get_position() renvoie un nom (str), on retrouve la Zone
+            target_zone = self.monitor.zones.get(target_name)
+            if target_zone is None:
+                continue
+
+            target_x: float = ((WINDOW_WIDTH / 2)
+                            + (target_zone.x - self.center_gx) * self.spacing)
+            target_y: float = ((WINDOW_HEIGHT / 2)
+                            + (target_zone.y - self.center_gy) * self.spacing)
+
+            sprite.target_x = target_x
+            sprite.target_y = target_y
+
+            any_moving = True
+
+        self._is_moving = any_moving
+
+    def _move_drones(self, delta_time: float) -> None:
+        """
+        Moves every drone sprite toward its target position.
+
+        Parameters:
+        - delta_time: float
+        """
+
+        still_moving: bool = False
+
+        for sprite in self.drone_sprites.values():
+            target_x = getattr(sprite, "target_x", sprite.center_x)
+            target_y = getattr(sprite, "target_y", sprite.center_y)
+
+            dx = target_x - sprite.center_x
+            dy = target_y - sprite.center_y
+            distance = math.hypot(dx, dy)
+
+            if distance < 2:
+                sprite.center_x = target_x
+                sprite.center_y = target_y
+                continue
+
+            still_moving = True
+            step = DRONE_SPEED * delta_time
+
+            if step >= distance:
+                sprite.center_x = target_x
+                sprite.center_y = target_y
+            else:
+                sprite.center_x += dx / distance * step
+                sprite.center_y += dy / distance * step
+
+        self._is_moving = still_moving

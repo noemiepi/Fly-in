@@ -13,7 +13,6 @@ class Algorithm():
 
     Attributes:
     - dijkstra(self) -> dict[str, float]
-    - scheduler(self) -> None
     """
     def __init__(self, zones: dict[str, Zone]) -> None:
         self.zones = zones
@@ -26,28 +25,25 @@ class Algorithm():
                         if zone.zone == "normal":
                             self.zone_weight[zone.name] = 1
 
-                        if zone.zone == "blocked":
+                        elif zone.zone == "blocked" or zone.name == "start":
                             self.zone_weight[zone.name] = np.inf
 
-                        if zone.zone == "restricted":
+                        elif zone.zone == "restricted":
                             self.zone_weight[zone.name] = 4
 
-                        if zone.zone == "priority":
+                        elif zone.zone == "priority":
                             self.zone_weight[zone.name] = 2
-
-                        if zone.name == "start":
-                            self.zone_weight[zone.name] = np.inf
 
                 if neighbour == "end":
                     self.zone_weight["end"] = 1
 
-    def dijkstra(self) -> dict[str, float]:
+    def dijkstra(self) -> dict[str, str]:
         """
         This is the algorithm that will be used
         to navigate the drones.
 
         Return
-        -> dict[str, float]
+        -> dict[str, str]
         """
         # Initialize every nodes value to infinity
         dist: dict[str, float] = {}
@@ -87,5 +83,46 @@ class Algorithm():
                             heappush(priority, (calc_dist, neighbour))
 
         # Searches the quickest route from the start to the end
+        path = self.find_next_step(predecessors, dist)
 
-        return dist
+        print()
+        print("Distances:")
+        print(dist)
+        print()
+        print("Predecessors:")
+        print(predecessors)
+        print()
+        print("Path:")
+        print(path)
+
+        return path
+
+    def find_next_step(self, predecessors: dict[str, Any],
+                       distances: dict[str, float]) -> dict[str, str]:
+        """
+        Searches the quickest route to go from the start to the end.
+
+        Parameter:
+          - predecessors: dict[str, Any]
+          - distances: dict[str, float]
+
+        Return
+        -> dict[str, str]
+        """
+        path: dict[str, str] = {}
+
+        final_cost: float = distances.get("end")
+        check_cost: float = 0
+
+        while check_cost != final_cost:
+            for neighbour, zone in predecessors.items():
+                zone_obj = self.zones.get(zone)
+                print(zone)
+                print(zone_obj.neighbours)
+                print()
+
+                if zone not in path.keys():
+                    path[zone] = neighbour
+                    check_cost += distances.get(neighbour) - check_cost
+
+        return path

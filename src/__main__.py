@@ -4,6 +4,7 @@ from src.parsing.map_parse import MapParser
 from src.ui.visual import Visualizer
 from src.ui.menu import UserMenu
 from src.monitor import Monitor
+from src.algorithm.dijkstra import Algorithm
 
 
 end = "\033[0m"

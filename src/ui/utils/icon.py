@@ -7,7 +7,6 @@ class Icon(arcade.Sprite):
     """
     Gives a visual representation of the legend.
     """
-
     def __init__(self, path: PathOrTexture, scale: float, name: str) -> None:
         super().__init__(path, scale)
 
@@ -18,4 +17,7 @@ class Icon(arcade.Sprite):
                                         font_name="Minecraft")
 
     def draw_text(self) -> None:
+        """
+        A method to draw the text of the icon.
+        """
         self.legend_label.draw()

@@ -29,9 +29,6 @@ class Monitor():
     def create_level(self) -> None:
         """
         Creates the level's object.
-
-        Return
-            -> None
         """
         for hub, data in self.level.items():
             if hub == "connections":
@@ -67,31 +64,46 @@ class Monitor():
         for name, drone in self.drones.items():
             drone.next_position(start)
 
-    # def simulate(self) -> None:
-    #     algo: Algorithm = Algorithm(self.zones)
-    #     path_cost = algo.dijkstra()
+    def simulate(self) -> None:
+        algo: Algorithm = Algorithm(self.zones)
+        paths_cost = algo.dijkstra()
 
-    #     self.turn += 1
+        self.turn += 1
+        for drone_name, drone_obj in self.drones.items():
+            if drone_obj.has_finished:
+                continue
 
-    #     for drone_name, drone_obj in self.drones.items():
-    #         if drone_obj.has_finished:
-    #             continue
+            current_name = drone_obj.get_position()
+            if current_name is None:
+                continue
 
-    #         drone_pos = drone_obj.get_position()
-    #         score: float = float('-inf')
-    #         if drone_pos:
-    #             for neighbors in self.zones[drone_pos].neighbours:
-    #                 if path_cost[neighbors] > score:
-    #                     score = path_cost[neighbors]
+            # Le drone est déjà arrivé
+            if current_name == "end":
+                drone_obj.has_finished = True
+                continue
 
-    #             drone_obj.next_position()
+            # On regarde quelle est la prochaine zone dans le chemin calculé
+            next_name = paths_cost.get(current_name)
+            if next_name is None:
+                continue
+
+            # On retrouve l'objet Zone correspondant
+            next_zone: Zone | None = None
+            for name, zone in self.zones.items():
+                if zone.name == next_name:
+                    next_zone = zone
+                    break
+
+            if next_zone is not None:
+                drone_obj.next_position(next_zone)
+
+                if next_zone.name == "end":
+                    drone_obj.has_finished = True
+
 
     def _create_drones(self) -> None:
         """
         Creates and stocks every drones in dictionary.
-
-        Return
-            -> None
         """
         nb_drones: int = 0
         i: int = 1
@@ -107,9 +119,6 @@ class Monitor():
     def _create_zones(self) -> None:
         """
         Creates every zones and stocks them in a dictionary.
-
-        Return
-            -> None
         """
         name: str = ""
         coords: tuple[int, int]

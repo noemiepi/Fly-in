@@ -9,7 +9,7 @@ class MapParser():
     This class will parse every map file present in the maps subfolders.
 
     Attributes:
-      - parse_file(self) -> tuple[bool, dict[str, list[Any]]]
+      - parse_file(self) -> tuple[bool, dict[str, dict[str, dict[str, Any]]]]
       - is_valid(self, file: str) -> tuple[bool, list[Any]]
     """
     def __init__(self) -> None:
@@ -29,7 +29,7 @@ class MapParser():
         Parse every map files.
 
         Return
-            -> tuple[bool, dict[str, dict[str, dict[str, Any]]]]
+          -> tuple[bool, dict[str, dict[str, dict[str, Any]]]]
         """
         maps_dict: dict[str, dict[str, dict[str, Any]]] = {}
         level_dict: dict[str, Any] = {}
