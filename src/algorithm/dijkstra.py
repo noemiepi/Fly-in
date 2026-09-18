@@ -114,9 +114,24 @@ class Algorithm():
         final_cost: float = distances.get("end")
         check_cost: float = 0
 
+        last_zone: str = ""
+
         while check_cost != final_cost:
             for neighbour, zone in predecessors.items():
                 zone_obj = self.zones.get(zone)
+                if last_zone != zone:
+                    last_zone = zone
+
+                else:
+                    for next_neigh in zone_obj.neighbours:
+                        if next_neigh == zone_obj.neighbours[0]:
+                            continue
+
+                        else:
+                            next_zone_obj = self.zones.get(next_neigh)
+                            print(next_neigh)
+                            print(next_zone_obj.neighbours)
+                    print()
                 print(zone)
                 print(zone_obj.neighbours)
                 print()
@@ -126,3 +141,6 @@ class Algorithm():
                     check_cost += distances.get(neighbour) - check_cost
 
         return path
+
+    def is_deadend(self, neighbour: Zone) -> None:
+        pass
