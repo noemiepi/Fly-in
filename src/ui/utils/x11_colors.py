@@ -144,5 +144,5 @@ X11_NAMES = {
     "lightslategrey": "#778899",
     "slategrey": "#708090",
     "darkslategrey": "#2f4f4f",
-    "black": "#000000"
+    "black": "#000000",
 }

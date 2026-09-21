@@ -1,7 +1,7 @@
 from src.ui.utils.x11_colors import X11_NAMES
 
 
-class Color():
+class Color:
     @staticmethod
     def get_color(color_name: str) -> tuple[int, int, int]:
         """

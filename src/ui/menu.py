@@ -11,7 +11,7 @@ r = "\033[31m\033[5m\033[1m"
 g = "\033[32m\033[5m\033[1m"
 
 
-class UserMenu():
+class UserMenu:
     """
     This class shows the user menu to select a map for the simulaton.
 
@@ -23,6 +23,7 @@ class UserMenu():
       - hardcore_maps(self) -> dict[str, Any]
       - creative_maps(self) -> dict[str, Any]
     """
+
     def __init__(self, maps_dict: dict[str, dict[str, Any]]) -> None:
         map_parse: MapParser = MapParser()
 
@@ -55,7 +56,7 @@ class UserMenu():
         """
         map_data: tuple[str, Any]
 
-        os.system('clear')
+        os.system("clear")
         print()
         print("███████╗██╗  ██╗     ██╗     ██████╗██╗   ██╗")
         print("██╔════╝██║  ╚═██╗ ██╔═╝       ██╔═╝████╗ ██║")
@@ -78,29 +79,31 @@ class UserMenu():
             choice = int(input("\nMake a choice (1-6): "))
 
             if not 1 <= choice <= 6:
-                print(f"\n{r}[ERROR]{end}: Invalid choice! "
-                      "Please select a number between 1 and 6")
+                print(
+                    f"\n{r}[ERROR]{end}: Invalid choice! "
+                    "Please select a number between 1 and 6"
+                )
                 time.sleep(1)
                 return self.home_menu()
 
             elif choice == 1:
-                os.system('clear')
+                os.system("clear")
                 map_data = self.easy_maps()
 
             elif choice == 2:
-                os.system('clear')
+                os.system("clear")
                 map_data = self.normal_maps()
 
             elif choice == 3:
-                os.system('clear')
+                os.system("clear")
                 map_data = self.hard_maps()
 
             elif choice == 4:
-                os.system('clear')
+                os.system("clear")
                 map_data = self.hardcore_maps()
 
             elif choice == 5:
-                os.system('clear')
+                os.system("clear")
                 map_data = self.creative_maps()
 
             elif choice == 6:
@@ -114,7 +117,7 @@ class UserMenu():
             return self.home_menu()
 
         except Exception as e:
-            os.system('clear')
+            os.system("clear")
             print(f"\n{e}")
 
         return map_data
@@ -169,13 +172,15 @@ class UserMenu():
             choice = int(input(f"\nMake a choice (1-{i}): "))
 
             if not 1 <= choice <= i:
-                print(f"\n{r}[ERROR]{end}: Invalid choice! "
-                      f"Please select a number between 1 and {i}")
+                print(
+                    f"\n{r}[ERROR]{end}: Invalid choice! "
+                    f"Please select a number between 1 and {i}"
+                )
                 time.sleep(1)
                 return self.home_menu()
 
             elif choice == i:
-                os.system('clear')
+                os.system("clear")
                 return self.home_menu()
 
             else:
@@ -192,7 +197,7 @@ class UserMenu():
             return self.home_menu()
 
         except Exception as e:
-            os.system('clear')
+            os.system("clear")
             print(f"\n{e}")
 
     def normal_maps(self) -> Any:
@@ -245,13 +250,15 @@ class UserMenu():
             choice = int(input(f"\nMake a choice (1-{i}): "))
 
             if not 1 <= choice <= i:
-                print(f"\n{r}[ERROR]{end}: Invalid choice! "
-                      f"Please select a number between 1 and {i}")
+                print(
+                    f"\n{r}[ERROR]{end}: Invalid choice! "
+                    f"Please select a number between 1 and {i}"
+                )
                 time.sleep(1)
                 return self.home_menu()
 
             elif choice == i:
-                os.system('clear')
+                os.system("clear")
                 return self.home_menu()
 
             else:
@@ -268,7 +275,7 @@ class UserMenu():
             return self.home_menu()
 
         except Exception as e:
-            os.system('clear')
+            os.system("clear")
             print(f"\n{e}")
 
     def hard_maps(self) -> Any:
@@ -321,13 +328,15 @@ class UserMenu():
             choice = int(input(f"\nMake a choice (1-{i}): "))
 
             if not 1 <= choice <= i:
-                print(f"\n{r}[ERROR]{end}: Invalid choice! "
-                      f"Please select a number between 1 and {i}")
+                print(
+                    f"\n{r}[ERROR]{end}: Invalid choice! "
+                    f"Please select a number between 1 and {i}"
+                )
                 time.sleep(1)
                 return self.home_menu()
 
             elif choice == i:
-                os.system('clear')
+                os.system("clear")
                 return self.home_menu()
 
             else:
@@ -344,7 +353,7 @@ class UserMenu():
             return self.home_menu()
 
         except Exception as e:
-            os.system('clear')
+            os.system("clear")
             print(f"\n{e}")
 
     def hardcore_maps(self) -> Any:
@@ -397,13 +406,15 @@ class UserMenu():
             choice = int(input(f"\nMake a choice (1-{i}): "))
 
             if not 1 <= choice <= i:
-                print(f"\n{r}[ERROR]{end}: Invalid choice! "
-                      f"Please select a number between 1 and {i}")
+                print(
+                    f"\n{r}[ERROR]{end}: Invalid choice! "
+                    f"Please select a number between 1 and {i}"
+                )
                 time.sleep(1)
                 return self.home_menu()
 
             elif choice == i:
-                os.system('clear')
+                os.system("clear")
                 return self.home_menu()
 
             else:
@@ -420,7 +431,7 @@ class UserMenu():
             return self.home_menu()
 
         except Exception as e:
-            os.system('clear')
+            os.system("clear")
             print(f"\n{e}")
 
     def creative_maps(self) -> Any:
@@ -473,13 +484,15 @@ class UserMenu():
             choice = int(input(f"\nMake a choice (1-{i}): "))
 
             if not 1 <= choice <= i:
-                print(f"\n{r}[ERROR]{end}: Invalid choice! "
-                      f"Please select a number between 1 and {i}")
+                print(
+                    f"\n{r}[ERROR]{end}: Invalid choice! "
+                    f"Please select a number between 1 and {i}"
+                )
                 time.sleep(1)
                 return self.home_menu()
 
             elif choice == i:
-                os.system('clear')
+                os.system("clear")
                 return self.home_menu()
 
             else:
@@ -496,5 +509,5 @@ class UserMenu():
             return self.home_menu()
 
         except Exception as e:
-            os.system('clear')
+            os.system("clear")
             print(f"\n{e}")

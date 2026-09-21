@@ -4,7 +4,6 @@ from src.parsing.map_parse import MapParser
 from src.ui.visual import Visualizer
 from src.ui.menu import UserMenu
 from src.monitor import Monitor
-from src.algorithm.dijkstra import Algorithm
 
 
 end = "\033[0m"
@@ -22,8 +21,10 @@ def main() -> None:
             raise ValueError
 
     except Exception as e:
-        print(f"{r}[ERROR]{end}: An unexpected error occured "
-              f"during the parsing:\n-> {e}")
+        print(
+            f"{r}[ERROR]{end}: An unexpected error occured "
+            f"during the parsing:\n-> {e}"
+        )
         exit()
     print(f"{g}[INFO]{end}: Parsing successful!")
 
@@ -41,6 +42,9 @@ def main() -> None:
     visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)
     visual.start_visual()
 
+    # Shows the number of turn
+    print(monitor.summary())
+
 
 if __name__ == "__main__":
     try:
@@ -49,6 +53,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print(f"\n{g}[INFO]{end}: Quitting Fly-in!")
 
-    # except Exception as e:
-    #     print(f"{r}[ERROR]{end}: An unexpected error occured:\n"
-    #           f"-> {e}")
+    except Exception as e:
+        print(f"{r}[ERROR]{end}: An unexpected error occured:\n-> {e}")
