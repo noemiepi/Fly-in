@@ -1,37 +1,25 @@
 import arcade
 
+from typing import Any
 
-class OutlinedText:
+_DIRECTIONS = [(-1, -1), (-1, 0), (-1, 1),
+               (0, -1),            (0, 1),
+               (1, -1),   (1, 0),  (1, 1),]
+
+
+class OutlinedText():
     """
     A class to draw an outline to a text.
     """
-    _DIRECTIONS = [
-        (-1, -1), (-1, 0), (-1, 1),
-        (0, -1),            (0, 1),
-        (1, -1),   (1, 0),  (1, 1),
-    ]
-
-    def __init__(
-            self,
-            text: str,
-            x: float,
-            y: float,
-            color: arcade.types.Color,
-            font_size: float,
-            outline_color: arcade.types.Color = arcade.color.BLACK,
-            thickness: int = 2,
-            **kwargs
-    ) -> None:
+    def __init__(self, text: str, x: float, y: float,
+                 color: arcade.types.Color | tuple[int, int, int],
+                 font_size: float,
+                 outline_color: arcade.types.Color = arcade.color.BLACK,
+                 thickness: int = 2, **kwargs: Any) -> None:
         self.outlines: list[arcade.Text] = [
-            arcade.Text(
-                text=text,
-                x=x + dx * thickness,
-                y=y + dy * thickness,
-                color=outline_color,
-                font_size=font_size,
-                **kwargs
-            )
-            for dx, dy in self._DIRECTIONS
+            arcade.Text(text=text, x=x + dx * thickness, y=y + dy * thickness,
+                        color=outline_color, font_size=font_size, **kwargs)
+            for dx, dy in _DIRECTIONS
         ]
         self.main = arcade.Text(
             text=text, x=x, y=y, color=color, font_size=font_size, **kwargs

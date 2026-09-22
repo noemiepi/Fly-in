@@ -8,6 +8,7 @@ from src.monitor import Monitor
 from src.ui.utils.icon import Icon
 from src.ui.utils.color import Color
 from src.ui.utils.text_outline import OutlinedText
+from src.ui.utils.drone_sprite import DroneSprite
 
 # --- CONSTANTS --- #
 WINDOW_WIDTH = 1300
@@ -72,11 +73,11 @@ class Visualizer(arcade.Window):
             arcade.shape_list.Shape
         ] = arcade.shape_list.ShapeElementList()
 
-        self.legend_list: arcade.SpriteList[arcade.Sprite] = (
+        self.legend_list: arcade.SpriteList[Icon] = (
             arcade.SpriteList()
         )
-        self.text_list: list[arcade.Text] = []
-        self.turn_text: arcade.Text
+        self.text_list: list[OutlinedText] = []
+        self.turn_text: OutlinedText
 
         # Loads the text font
         arcade.load_font(f"{FONT_PATH}MinecraftFont.woff")
@@ -241,7 +242,6 @@ class Visualizer(arcade.Window):
 
         self.legend_list.draw()
         self.turn_text.draw()
-
 
     def on_update(self, delta_time: float) -> None:
         """
@@ -425,10 +425,10 @@ class Visualizer(arcade.Window):
           - x: float
           - y: float
         """
-        self.drone_sprites: dict[str, arcade.Sprite] = {}
+        self.drone_sprites: dict[str, DroneSprite] = {}
 
         for drone_name, drone_obj in self.monitor.drones.items():
-            drone: arcade.Sprite = arcade.Sprite(
+            drone: DroneSprite = DroneSprite(
                 self.drone, scale=(self.sprite_scale * 0.15)
             )
             drone.center_x = x - random.randint(0, 10)

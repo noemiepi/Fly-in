@@ -118,7 +118,7 @@ To determine which one to choose I looked for the pros and cons of these two alg
   </tr>
   <tr>
     <th>Cons</th>
-    <td>-</td>
+    <td>None noticed for this use</td>
     <td>Uses coordinates (not ideal for this project as the zones have coordinates)</td>
   </tr>
 </table>

@@ -1,7 +1,7 @@
 from typing import Any
 
 
-class Zone:
+class Zone():
     """
     This class will create a zone object.
     """

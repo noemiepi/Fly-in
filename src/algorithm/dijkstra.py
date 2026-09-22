@@ -8,7 +8,7 @@ from src.objects.zone import Zone
 ROUTE_PENALTY: float = 1
 
 
-class Algorithm:
+class Algorithm():
     """
     This is the class for the algorithm and a scheduler
     that will be used to navigate the drones.

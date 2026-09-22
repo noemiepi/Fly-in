@@ -12,7 +12,7 @@ g = "\033[32m\033[5m\033[1m"
 MAX_ROUTES: int = 8
 
 
-class Monitor:
+class Monitor():
     """
     This class will create every needed objects
     (drones and zones) the level needs.
@@ -319,7 +319,7 @@ class Monitor:
                     continue
 
             if next_name != "end" and \
-                self.zone_limit.get(next_name, 0) >= next_zone.nb_drones:
+               self.zone_limit.get(next_name, 0) >= next_zone.nb_drones:
                 continue
 
             # The drone goes to the next zone

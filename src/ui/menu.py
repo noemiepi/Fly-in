@@ -11,7 +11,7 @@ r = "\033[31m\033[5m\033[1m"
 g = "\033[32m\033[5m\033[1m"
 
 
-class UserMenu:
+class UserMenu():
     """
     This class shows the user menu to select a map for the simulaton.
 

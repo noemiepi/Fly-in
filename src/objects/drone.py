@@ -1,7 +1,7 @@
 from src.objects.zone import Zone
 
 
-class Drone:
+class Drone():
     """
     This class will create a drone object.
 

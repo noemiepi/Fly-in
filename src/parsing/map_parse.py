@@ -4,7 +4,7 @@ import glob
 from typing import Any
 
 
-class MapParser:
+class MapParser():
     """
     This class will parse every map file present in the maps subfolders.
 
