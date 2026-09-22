@@ -1,6 +1,7 @@
 from typing import Any
 
 from src.parsing.map_parse import MapParser
+from src.parsing.arg_parse import arg_parse
 from src.ui.visual import Visualizer
 from src.ui.menu import UserMenu
 from src.monitor import Monitor
@@ -20,31 +21,44 @@ def main() -> None:
         if valid is False:
             raise ValueError
 
+        # Parses the given arguments
+        args = arg_parse()
+        arc_visual = args.visual
+        output = args.output
+
     except Exception as e:
-        print(
-            f"{r}[ERROR]{end}: An unexpected error occured "
-            f"during the parsing:\n-> {e}"
-        )
+        print(f"{r}[ERROR]{end}: An unexpected error occured "
+              f"during the parsing:\n-> {e}")
         exit()
     print(f"{g}[INFO]{end}: Parsing successful!")
 
-    # Visualizer
+    # User Menu
     lvl_name: str = ""
     map_data: dict[str, Any] = {}
     menu: UserMenu = UserMenu(maps_dict)
     lvl_name, map_data = menu.home_menu()
 
     # Map monitor
-    monitor: Monitor = Monitor(map_data)
+    monitor: Monitor = Monitor(map_data, output)
     monitor.create_level()
 
     # Visualizer
-    visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)
-    visual.start_visual()
+    if arc_visual is True:
+        visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)
+        visual.start_visual()
+    else:
+        while monitor.is_over() is False:
+            monitor.simulate()
+        print(monitor.summary())
 
-    # Shows the number of turn
-    print(monitor.summary())
-
+    if output is True:
+        monitor.write_output += "\nSimulation finished in "
+        monitor.write_output += f"{monitor.turn} turns"
+        try:
+            with open("sim_output.txt", 'w') as f:
+                f.write(monitor.write_output)
+        except Exception as e:
+            raise ValueError(f"The output writing had an issue: {e}")
 
 if __name__ == "__main__":
     try:

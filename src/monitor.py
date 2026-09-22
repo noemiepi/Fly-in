@@ -21,12 +21,12 @@ class Monitor:
       - create_level(self) -> None
       - simulate(self) -> None
       - summary(self) -> str
+      - is_over(self) -> bool
       - _plan_routes(self) -> None
       - _give_routes(self, algo: Algorithm,
                      routes: list[dict[str, str]]) -> None
       - _route_rate(self, route: dict[str, str]) -> int
       - _count_turns(self) -> float
-      - _is_over(self) -> bool
       - _flag_finished(self) -> None
       - _remaining(self, drone: Drone) -> int
       - _play_turn(self) -> list[str]
@@ -34,8 +34,10 @@ class Monitor:
       - _create_zones(self) -> None
     """
 
-    def __init__(self, data: dict[str, Any]) -> None:
+    def __init__(self, data: dict[str, Any], output: bool) -> None:
         self.level = data
+        self.output = output
+        self.write_output: str = ""
 
         self.drones: dict[str, Drone] = {}
         self.zones: dict[str, Zone] = {}
@@ -106,12 +108,14 @@ class Monitor:
         if not self.solvable:
             return
 
-        if self._is_over():
+        if self.is_over():
             self._flag_finished()
             return
 
         moves: list[str] = self._play_turn()
         print(" ".join(moves))
+        self.write_output += " ".join(moves)
+        self.write_output += "\n"
 
     def summary(self) -> str:
         """
@@ -120,7 +124,20 @@ class Monitor:
         Return
         -> str
         """
-        return f"{g}INFO:{end} Simulation finished in {self.turn} turns"
+        return f"{g}[INFO]{end}: Simulation finished in {self.turn} turns"
+
+    def is_over(self) -> bool:
+        """
+        Checks if every drone reached the end.
+
+        Return:
+        -> bool
+        """
+        for drone in self.drones.values():
+            if drone.get_position() != "end" or drone.transit is not None:
+                return False
+
+        return True
 
     def _plan_routes(self) -> None:
         """
@@ -190,7 +207,10 @@ class Monitor:
 
         while zone != "end":
             nxt = route[zone]
-            rate = min(rate, self.link_limit[(zone, nxt)])
+            try:
+                rate = min(rate, self.link_limit[(zone, nxt)])
+            except KeyError:
+                rate = min(rate, self.link_limit[(nxt, zone)])
 
             if nxt != "end":
                 rate = min(rate, self.zones[nxt].nb_drones)
@@ -208,7 +228,7 @@ class Monitor:
         """
         limit: int = 20 * (len(self.zones) + len(self.drones))
 
-        while not self._is_over():
+        while not self.is_over():
             moves = self._play_turn()
 
             # In case there are no movements
@@ -216,19 +236,6 @@ class Monitor:
                 return float("inf")
 
         return self.turn
-
-    def _is_over(self) -> bool:
-        """
-        Checks if every drone reached the end.
-
-        Return:
-        -> bool
-        """
-        for drone in self.drones.values():
-            if drone.get_position() != "end" or drone.transit is not None:
-                return False
-
-        return True
 
     def _flag_finished(self) -> None:
         """
@@ -303,13 +310,16 @@ class Monitor:
             link = (current_name, next_name)
 
             # Checks that the next zone has room for another drone
-            if link_use.get(link, 0) >= self.link_limit[link]:
-                continue
+            try:
+                if link_use.get(link, 0) >= self.link_limit[link]:
+                    continue
+            except KeyError:
+                link = (next_name, current_name)
+                if link_use.get(link, 0) >= self.link_limit[link]:
+                    continue
 
-            if (
-                next_name != "end"
-                and self.zone_limit.get(next_name, 0) >= next_zone.nb_drones
-            ):
+            if next_name != "end" and \
+                self.zone_limit.get(next_name, 0) >= next_zone.nb_drones:
                 continue
 
             # The drone goes to the next zone

@@ -39,6 +39,24 @@ run:
 	$(PYTHON) -m src
 
 
+visual:
+	@clear
+	@echo "$(BLUE)Running the project...$(END)"
+	$(PYTHON) -m src --visual
+
+
+output:
+	@clear
+	@echo "$(BLUE)Running the project...$(END)"
+	$(PYTHON) -m src --output
+
+
+visual-output:
+	@clear
+	@echo "$(BLUE)Running the project...$(END)"
+	$(PYTHON) -m src --visual --output
+
+
 debug:
 	@clear
 	@echo "$(BLUE)Running the project in debug...$(END)"

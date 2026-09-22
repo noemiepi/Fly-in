@@ -24,10 +24,21 @@ And below, you will find other commands:
 | :---: | --- |
 | `make install` | Install the project's dependencies |
 | `make run` | Execute the program (like the `make` command) |
+| `make visual` | Execute the program with the arcade visual |
+| `make output` | Execute the program and writes the output file |
+| `make visual-output` | Execute the program with the arcade visual and writes the output file |
 | `make debug` | Run the script using the Python built-in debugger |
 | `make clean` | Remove temporary files and caches |
 | `make lint` | Execute the `flake8` and `mypy` commands |
 | `make lint-strict` | Execute the `flake8` and a stricter version of `mypy` commands |
+
+</br>
+
+Two flags were added in this project:
+| Flags | Explanation |
+| :---: | --- |
+| `-v` or `--visual` | Runs the program using the arcade visual |
+| `-o` or `--output` | Writes the terminal output in a file located at the root of the repository |
 
 ## Usage Example
 Files containing the maps' data are given in this format:
@@ -124,16 +135,18 @@ Below is a schema to give a visual representation of the algorithm:
 The nodes are marked in red once the algorithm has visited each neighbour of the node.
 
 ### Implementation Strategy
-*A detailed description of your algorithm choices and implementation strategy must also be included*
+*A detailed description of your implementation strategy*
 
 ## Visualization
 When starting the program, the user gets on the main menu to choose the difficulty and then the map, as shown below:</br>
 <img src="assets/README/main_menu.png" />
 
-Once the map is chosen, a visual representation of the movements of the drones through it will start:
-*example image*
+When the map is chosen, during the simulation, the terminal will display the drones' actions turn by turn. At the end, it will then prints the number of turns the simulation took. Here is an exemple:</br>
+<img src="assets/README/terminal_output.png" />
 
-*Documentation of the visual representation features and how they enhance the user experience.*
+If the flag is used, a visual representation of the movements of the drones through it will start:</br>
+<img src="assets/README/simulation.png" />
+The visual here will help have a better way to visualize the drones movements.
 
 ## Resources
 ### Notions

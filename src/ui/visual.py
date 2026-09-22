@@ -1,7 +1,8 @@
 import os
+import time
+import math
 import arcade
 import random
-import math
 
 from src.monitor import Monitor
 from src.ui.utils.icon import Icon
@@ -24,7 +25,7 @@ FONT_PATH = "assets/font/"
 SCALE = 0.5
 SPRITE_SIZE = 256
 MARGIN = 150
-DRONE_SPEED = 100
+DRONE_SPEED = 200
 # ----------------- #
 
 
@@ -257,6 +258,13 @@ class Visualizer(arcade.Window):
             self._move_drones(delta_time)
 
         self.turn_text.text = f"Turn {self.monitor.turn}"
+
+        # Shows the number of turn at the end of the simulation
+        # and stops it after 3 seconds
+        if self.monitor.is_over() is True and not self._is_moving:
+            print(self.monitor.summary())
+            time.sleep(3)
+            arcade.exit()
 
     def start_visual(self) -> None:
         """
