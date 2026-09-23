@@ -124,7 +124,7 @@ class Monitor():
         Return
         -> str
         """
-        return f"{g}[INFO]{end}: Simulation finished in {self.turn} turns"
+        return f"\n{g}[INFO]{end}: Simulation finished in {self.turn} turns"
 
     def is_over(self) -> bool:
         """

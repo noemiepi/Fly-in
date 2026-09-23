@@ -78,6 +78,7 @@ class Visualizer(arcade.Window):
         )
         self.text_list: list[OutlinedText] = []
         self.turn_text: OutlinedText
+        self.instruction: OutlinedText
 
         # Loads the text font
         arcade.load_font(f"{FONT_PATH}MinecraftFont.woff")
@@ -99,6 +100,16 @@ class Visualizer(arcade.Window):
             y=40,
             color=arcade.color.WHITE,
             font_size=13,
+            anchor_x="center",
+            font_name="Minecraft",
+        )
+
+        self.instruction = OutlinedText(
+            text="Press SPACE to start",
+            x=WINDOW_WIDTH / 2,
+            y=50,
+            color=arcade.color.WHITE,
+            font_size=20,
             anchor_x="center",
             font_name="Minecraft",
         )
@@ -157,6 +168,7 @@ class Visualizer(arcade.Window):
             count += 1
 
         # Builds the zones and their connections
+        n: int = 7
 
         for zone, data in self.monitor.zones.items():
             x: float = (WINDOW_WIDTH / 2) + (
@@ -167,6 +179,7 @@ class Visualizer(arcade.Window):
             ) * self.spacing
 
             if zone == "start":
+                start_x: int = data.x
                 self.start.center_x = x
                 self.start.center_y = y + 35
                 self.zone_list.append(self.start)
@@ -177,15 +190,16 @@ class Visualizer(arcade.Window):
                     y=y - 60,
                     color=Color.get_color(data.color),
                     outline_color=arcade.color.WHITE,
-                    font_size=13,
+                    font_size=(13 * self.sprite_scale) * 2.25,
                     anchor_x="center",
-                    font_name="Minecraft",
+                    font_name="Minecraft"
                 )
                 self.text_list.append(text)
 
                 self._create_drones(x, y)
 
             elif zone == "end":
+                end_x: int = data.x
                 self.end.center_x = x
                 self.end.center_y = y + 10
                 self.zone_list.append(self.end)
@@ -196,14 +210,24 @@ class Visualizer(arcade.Window):
                     y=y - 90,
                     color=Color.get_color(data.color),
                     outline_color=arcade.color.WHITE,
-                    font_size=13,
+                    font_size=(13 * self.sprite_scale) * 2.25,
                     anchor_x="center",
-                    font_name="Minecraft",
+                    font_name="Minecraft"
                 )
                 self.text_list.append(text)
 
             else:
-                self._build_zone(data.name, data.zone, data.color, x, y)
+                dist = end_x - start_x
+
+                if len(data.name) > n and dist >= 8:
+                    lst = [data.name[i:i+n]
+                           for i in range(0, len(data.name), n)]
+                    name = lst[0] + ".." + lst[-1][-1]
+
+                else:
+                    name = data.name
+
+                self._build_zone(name, data.zone, data.color, x, y)
 
         self._build_connections()
 
@@ -242,6 +266,7 @@ class Visualizer(arcade.Window):
 
         self.legend_list.draw()
         self.turn_text.draw()
+        self.instruction.draw()
 
     def on_update(self, delta_time: float) -> None:
         """
@@ -250,6 +275,9 @@ class Visualizer(arcade.Window):
         Parameters:
         - delta_time: float
         """
+        if self._is_sim_started:
+            self.instruction.text = ""
+
         if self._is_sim_started and not self._is_moving:
             self.monitor.simulate()
             self._start_drone_movement()
@@ -263,7 +291,7 @@ class Visualizer(arcade.Window):
         # and stops it after 3 seconds
         if self.monitor.is_over() is True and not self._is_moving:
             print(self.monitor.summary())
-            time.sleep(3)
+            time.sleep(2)
             arcade.exit()
 
     def start_visual(self) -> None:
@@ -281,11 +309,11 @@ class Visualizer(arcade.Window):
           - _modifiers: int
         """
         if key == arcade.key.ESCAPE:
-            print("Closing the visual!")
+            print("\nClosing the visual!")
             arcade.exit()
 
         if key == arcade.key.SPACE and self._is_sim_started is not True:
-            print("Starting simulation")
+            print("Starting simulation\n")
             self._is_sim_started = True
 
     def _build_zone(
@@ -316,11 +344,10 @@ class Visualizer(arcade.Window):
                 y=y - 65,
                 color=Color.get_color(color),
                 outline_color=arcade.color.WHITE,
-                font_size=13,
+                font_size=(13 * self.sprite_scale) * 2.25,
                 anchor_x="center",
-                font_name="Minecraft",
+                font_name="Minecraft"
             )
-            self.text_list.append(text)
 
         if zone == "priority":
             priority: arcade.Sprite = arcade.Sprite(
@@ -337,11 +364,10 @@ class Visualizer(arcade.Window):
                 y=y - 55,
                 color=Color.get_color(color),
                 outline_color=arcade.color.WHITE,
-                font_size=13,
+                font_size=(13 * self.sprite_scale) * 2.25,
                 anchor_x="center",
-                font_name="Minecraft",
+                font_name="Minecraft"
             )
-            self.text_list.append(text)
 
         if zone == "restricted":
             restricted: arcade.Sprite = arcade.Sprite(
@@ -358,11 +384,10 @@ class Visualizer(arcade.Window):
                 y=y - 100,
                 color=Color.get_color(color),
                 outline_color=arcade.color.WHITE,
-                font_size=13,
+                font_size=(13 * self.sprite_scale) * 2.25,
                 anchor_x="center",
-                font_name="Minecraft",
+                font_name="Minecraft"
             )
-            self.text_list.append(text)
 
         if zone == "blocked":
             blocked: arcade.Sprite = arcade.Sprite(
@@ -379,11 +404,12 @@ class Visualizer(arcade.Window):
                 y=y - 90,
                 color=Color.get_color(color),
                 outline_color=arcade.color.WHITE,
-                font_size=13,
+                font_size=(13 * self.sprite_scale) * 2.25,
                 anchor_x="center",
-                font_name="Minecraft",
+                font_name="Minecraft"
             )
-            self.text_list.append(text)
+
+        self.text_list.append(text)
 
     def _build_connections(self) -> None:
         """
@@ -428,9 +454,28 @@ class Visualizer(arcade.Window):
         self.drone_sprites: dict[str, DroneSprite] = {}
 
         for drone_name, drone_obj in self.monitor.drones.items():
-            drone: DroneSprite = DroneSprite(
-                self.drone, scale=(self.sprite_scale * 0.15)
-            )
+            prob_b: float = random.random()
+            prob_nec_b: float = random.random()
+
+            if prob_b >= 0.3:
+                if prob_nec_b >= 0.5:
+                    drone: DroneSprite = DroneSprite(self.bee,
+                                                     scale=(self.sprite_scale
+                                                            * 0.15))
+
+                else:
+                    drone = DroneSprite(self.nec_bee, scale=(self.sprite_scale
+                                                             * 0.15))
+
+            else:
+                if prob_nec_b >= 0.5:
+                    drone = DroneSprite(self.bbee, scale=(self.sprite_scale
+                                                          * 0.15))
+
+                else:
+                    drone = DroneSprite(self.nec_bbee, scale=(self.sprite_scale
+                                                              * 0.15))
+
             drone.center_x = x - random.randint(0, 10)
             drone.center_y = y + random.randint(0, 10)
 
@@ -471,7 +516,11 @@ class Visualizer(arcade.Window):
             )
 
             # Creation of a drone
-            self.drone = arcade.load_texture(f"{DRONE_PATH}bee.png")
+            self.bee = arcade.load_texture(f"{DRONE_PATH}bee.png")
+            self.nec_bee = arcade.load_texture(f"{DRONE_PATH}nectar_bee.png")
+            self.bbee = arcade.load_texture(f"{DRONE_PATH}baby_bee.png")
+            self.nec_bbee = arcade.load_texture(
+                f"{DRONE_PATH}nectar_baby_bee.png")
 
         except FileNotFoundError:
             raise ValueError("Assets folder not found")
@@ -481,7 +530,7 @@ class Visualizer(arcade.Window):
         Sets the pixel target of every drone sprite based on
         the zone the drone is now heading to.
         """
-        any_moving: bool = False
+        moving: bool = False
 
         for drone_name, drone_obj in self.monitor.drones.items():
             if drone_obj.has_finished:
@@ -509,9 +558,9 @@ class Visualizer(arcade.Window):
             sprite.target_x = target_x
             sprite.target_y = target_y
 
-            any_moving = True
+            moving = True
 
-        self._is_moving = any_moving
+        self._is_moving = moving
 
     def _move_drones(self, delta_time: float) -> None:
         """
@@ -520,7 +569,7 @@ class Visualizer(arcade.Window):
         Parameters:
         - delta_time: float
         """
-        still_moving: bool = False
+        moving: bool = False
 
         for sprite in self.drone_sprites.values():
             target_x = getattr(sprite, "target_x", sprite.center_x)
@@ -535,7 +584,7 @@ class Visualizer(arcade.Window):
                 sprite.center_y = target_y
                 continue
 
-            still_moving = True
+            moving = True
             step = DRONE_SPEED * delta_time
 
             if step >= distance:
@@ -545,4 +594,4 @@ class Visualizer(arcade.Window):
                 sprite.center_x += dx / distance * step
                 sprite.center_y += dy / distance * step
 
-        self._is_moving = still_moving
+        self._is_moving = moving

@@ -17,6 +17,8 @@ make
 uv run python -m src
 ---
 python3 -m src # Runs the program
+
+make visual # Runs the program with the arcade visual
 ```
 
 And below, you will find other commands:
@@ -25,8 +27,8 @@ And below, you will find other commands:
 | `make install` | Install the project's dependencies |
 | `make run` | Execute the program (like the `make` command) |
 | `make visual` | Execute the program with the arcade visual |
-| `make output` | Execute the program and writes the output file |
-| `make visual-output` | Execute the program with the arcade visual and writes the output file |
+| `make output` | Execute the program and writes an output file |
+| `make visual-output` | Execute the program with the arcade visual and writes an output file |
 | `make debug` | Run the script using the Python built-in debugger |
 | `make clean` | Remove temporary files and caches |
 | `make lint` | Execute the `flake8` and `mypy` commands |
@@ -86,7 +88,7 @@ D<ID> # Refers to the drone (D1, D2)
 <zone> # Name of the destination zone
 
 <connection> # Name of the connection towards a restricted zone
-
+---
 # Each movement needs to be defined as such
 D<ID>-<zone>
 
@@ -130,22 +132,34 @@ Dijkstra uses a table to keep track of every node possible.</br>
 It starts by assigning a distance of 0 to the start node and every other node's values are equal to infinity. Then it chooses an unvisited node with the shortest distance and calculates the distance from the start node to this node. If the distance is shorter than the current distance, it is updated.</br>
 Below is a schema to give a visual representation of the algorithm:
 
-<img src="assets/README/dijkstra.gif" />
+<div align="center">
+  <img src="assets/README/dijkstra.gif" />
 
-The nodes are marked in red once the algorithm has visited each neighbour of the node.
+  <i>The nodes are marked in red once the algorithm has visited each neighbour of the node.</i>
+</div>
 
-### Implementation Strategy
-*A detailed description of your implementation strategy*
+## Implementation Strategy
+This project is Object Oriented, meaning classes were used for a majority of aspects in the program.</br>
+
+The drones are guided by the `Monitor` class. It uses the Dijkstra algorithm and takes into account the capacity of the zones and their connections to move the drones effectively.</br>
+
+The visual is handled using the arcade library.
 
 ## Visualization
 When starting the program, the user gets on the main menu to choose the difficulty and then the map, as shown below:</br>
-<img src="assets/README/main_menu.png" />
+<div align="center">
+  <img src="assets/README/main_menu.png" />
+</div>
 
 When the map is chosen, during the simulation, the terminal will display the drones' actions turn by turn. At the end, it will then prints the number of turns the simulation took. Here is an exemple:</br>
-<img src="assets/README/terminal_output.png" />
+<div align="center">
+  <img src="assets/README/terminal_output.png" />
+</div>
 
 If the flag is used, a visual representation of the movements of the drones through it will start:</br>
-<img src="assets/README/simulation.png" />
+<div align="center">
+  <img src="assets/README/simulation.png" />
+</div>
 The visual here will help have a better way to visualize the drones movements.
 
 ## Resources

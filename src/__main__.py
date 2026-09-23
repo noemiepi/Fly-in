@@ -47,6 +47,7 @@ def main() -> None:
         visual: Visualizer = Visualizer(lvl_name.strip(".txt"), monitor)
         visual.start_visual()
     else:
+        print("Starting simulation\n")
         while monitor.is_over() is False:
             monitor.simulate()
         print(monitor.summary())
