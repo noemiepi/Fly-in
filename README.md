@@ -5,7 +5,7 @@
 </div>
 
 ## Description
-The goal of this project is to design a system that efficiently routes a fleet of drones from a starting point to an end point, all while following of the different types of zones.</br>
+The goal of this project is to design a system that efficiently routes a fleet of drones from a starting point to an end point, all while following the different types of zones.</br>
 To successfully do so, we need to choose an adapted pathfinding algorithm to move the drones across the given maps.
 
 ## Instructions
@@ -27,8 +27,8 @@ And below, you will find other commands:
 | `make install` | Install the project's dependencies |
 | `make run` | Execute the program (like the `make` command) |
 | `make visual` | Execute the program with the arcade visual |
-| `make output` | Execute the program and writes an output file |
-| `make visual-output` | Execute the program with the arcade visual and writes an output file |
+| `make output` | Execute the program and write an output file |
+| `make visual-output` | Execute the program with the arcade visual and write an output file |
 | `make debug` | Run the script using the Python built-in debugger |
 | `make clean` | Remove temporary files and caches |
 | `make lint` | Execute the `flake8` and `mypy` commands |
@@ -105,7 +105,7 @@ D1-goal D2-goal
 ## Algorithm Explanation
 ### Algorithm Choice
 During my research for a path-finding algorithm, two of them caught my attention: <b>A*</b> and **Dijkstra**.
-To determine which one to choose I looked for the pros and cons of these two algorithms for this project.
+To determine which one to choose, I looked for the pros and cons of these two algorithms for this project.
 
 <table>
   <tr>
@@ -151,7 +151,7 @@ When starting the program, the user gets on the main menu to choose the difficul
   <img src="assets/README/main_menu.png" />
 </div>
 
-When the map is chosen, during the simulation, the terminal will display the drones' actions turn by turn. At the end, it will then prints the number of turns the simulation took. Here is an exemple:</br>
+When the map is chosen, during the simulation, the terminal will display the drones' actions turn by turn. At the end, it will then print the number of turns the simulation took. Here is an example:</br>
 <div align="center">
   <img src="assets/README/terminal_output.png" />
 </div>
@@ -160,7 +160,7 @@ If the flag is used, a visual representation of the movements of the drones thro
 <div align="center">
   <img src="assets/README/simulation.png" />
 </div>
-The visual here will help have a better way to visualize the drones movements.
+The visual here will help have a better way to visualize the drones' movements.
 
 ## Resources
 ### Notions
