@@ -1,0 +1,10 @@
+nb_drones: 1
+
+start_hub: start 0 0
+hub: hub1 1 0 [zone=restricted]
+hub: hub2 2 0 [zone=restricted]
+end_hub: end 3 0
+
+connection: start-hub1
+connection: hub1-hub2
+connection: hub2-end

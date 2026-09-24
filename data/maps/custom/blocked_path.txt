@@ -1,0 +1,45 @@
+nb_drones: 10
+
+hub: rock -1 0 [color=black zone=blocked]
+start_hub: start 0 0 [color=green]
+
+hub: road1 1 0 [color=yellow zone=restricted]
+hub: road2 2 0 [color=yellow zone=blocked]
+
+hub: other1 1 1 [color=orange zone=restricted]
+hub: other2 2 1 [color=orange zone=restricted]
+
+hub: fast_way1 0 -1 [color=brown zone=blocked]
+hub: fast_way2 1 -1 [color=brown]
+hub: fast_way3 2 -1 [color=brown]
+
+hub: fast_wayp1 0 2 [color=blue zone=priority]
+hub: fast_wayp2 1 2 [color=blue zone=blocked]
+hub: fast_wayp3 3 2 [color=blue]
+
+hub: rock_big_rock_a_big_rock2 2 -2 [color=black zone=blocked]
+
+end_hub: goal 3 0 [color=red]
+
+connection: start-road1
+connection: road1-road2
+connection: road2-goal
+
+connection: start-other1
+connection: other1-other2
+connection: other2-goal
+
+connection: start-fast_way1
+connection: fast_way1-fast_way2
+connection: fast_way2-fast_way3
+connection: fast_way3-goal
+
+connection: start-fast_wayp1
+connection: fast_wayp1-fast_wayp2
+connection: fast_wayp2-fast_wayp3
+connection: fast_wayp3-goal
+
+connection: rock-start
+
+connection: start-rock_big_rock_a_big_rock2
+connection: rock_big_rock_a_big_rock2-goal

@@ -27,6 +27,7 @@ SCALE = 0.5
 SPRITE_SIZE = 256
 MARGIN = 150
 DRONE_SPEED = 200
+TURN_PAUSE = 0.5
 # ----------------- #
 
 
@@ -53,6 +54,7 @@ class Visualizer(arcade.Window):
         self.setup()
         self._is_sim_started: bool = False
         self._is_moving: bool = False
+        self._turn_timer: float = 0.0
 
     def setup(self) -> None:
         """
@@ -269,9 +271,13 @@ class Visualizer(arcade.Window):
         if self._is_sim_started:
             self.instruction.text = ""
 
-        if self._is_sim_started and not self._is_moving:
+        self._turn_timer += delta_time
+
+        if self._is_sim_started and not self._is_moving \
+           and self._turn_timer >= TURN_PAUSE:
             self.monitor.simulate()
             self._start_drone_movement()
+            self._turn_timer = 0.0
 
         if self._is_moving:
             self._move_drones(delta_time)
@@ -307,9 +313,8 @@ class Visualizer(arcade.Window):
             print("Starting simulation\n")
             self._is_sim_started = True
 
-    def _build_zone(
-        self, name: str, zone: str, color: str, x: float, y: float
-    ) -> None:
+    def _build_zone(self, name: str, zone: str, color: str,
+                    x: float, y: float) -> None:
         """
         Builds the different zones and display their name below.
 
@@ -545,6 +550,22 @@ class Visualizer(arcade.Window):
             target_y: float = (WINDOW_HEIGHT / 2) + (
                 target_zone.y - self.center_gy
             ) * self.spacing
+
+            # Makes the drone stop in the middle of the connection
+            if drone_obj.transit is not None:
+                from_name, _ = drone_obj.transit
+                from_zone = self.monitor.zones.get(from_name)
+
+                if from_zone is not None:
+                    from_x = (WINDOW_WIDTH / 2) + (
+                        from_zone.x - self.center_gx
+                    ) * self.spacing
+                    from_y = (WINDOW_HEIGHT / 2) + (
+                        from_zone.y - self.center_gy
+                    ) * self.spacing
+
+                    target_x = (from_x + target_x) / 2
+                    target_y = (from_y + target_y) / 2
 
             sprite.target_x = target_x
             sprite.target_y = target_y

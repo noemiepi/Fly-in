@@ -1,0 +1,65 @@
+nb_drones: 1000
+
+start_hub: Spawn_Point 0 5 [max_drones=1000 color=white]
+end_hub: Arrival_Vault 30 5 [max_drones=1000 color=green]
+
+hub: North_1 5 15 [max_drones=50 color=gray]
+hub: North_2 10 18 [max_drones=50 color=gray]
+hub: North_3 15 20 [max_drones=50 color=gray]
+hub: North_4 20 18 [max_drones=50 color=gray]
+hub: North_5 25 15 [max_drones=50 color=gray]
+
+hub: Center_Entry 5 5 [max_drones=100 color=gray]
+hub: Bottleneck_In 10 5 [max_drones=20 color=gray]
+hub: The_Needle 15 5 [zone=restricted max_drones=1 color=red]
+hub: Bottleneck_Out 20 5 [max_drones=20 color=gray]
+hub: Center_Exit 25 5 [max_drones=100 color=gray]
+
+hub: South_Alpha 5 0 [zone=priority max_drones=10 color=yellow]
+hub: South_Beta 10 -2 [zone=priority max_drones=10 color=yellow]
+hub: South_Gamma 15 -3 [zone=priority max_drones=10 color=yellow]
+hub: South_Delta 20 -2 [zone=priority max_drones=10 color=yellow]
+hub: South_Epsilon 25 0 [zone=priority max_drones=10 color=yellow]
+
+hub: Wall_Lower 15 2 [zone=blocked max_drones=1 color=gray]
+hub: Wall_Upper 15 8 [zone=blocked max_drones=1 color=gray]
+hub: Dead_End_Trap 10 10 [zone=blocked max_drones=10 color=gray]
+
+hub: Junction_West 2 5 [max_drones=200 color=gray]
+hub: Junction_East 28 5 [max_drones=200 color=gray]
+
+connection: Spawn_Point-Junction_West
+connection: Junction_West-North_1
+connection: Junction_West-Center_Entry
+connection: Junction_West-South_Alpha
+
+connection: North_1-North_2
+connection: North_2-North_3
+connection: North_3-North_4
+connection: North_4-North_5
+connection: North_5-Junction_East
+
+connection: Center_Entry-Bottleneck_In
+connection: Bottleneck_In-The_Needle
+connection: The_Needle-Bottleneck_Out
+connection: Bottleneck_Out-Center_Exit
+connection: Center_Exit-Junction_East
+
+connection: South_Alpha-South_Beta
+connection: South_Beta-South_Gamma
+connection: South_Gamma-South_Delta
+connection: South_Delta-South_Epsilon
+connection: South_Epsilon-Junction_East
+
+connection: North_2-Center_Entry
+connection: Center_Entry-South_Beta
+connection: Bottleneck_In-South_Gamma
+connection: South_Gamma-Bottleneck_Out
+connection: North_4-Center_Exit
+connection: Center_Exit-South_Delta
+
+connection: Center_Entry-Wall_Upper
+connection: Center_Entry-Wall_Lower
+connection: Bottleneck_In-Dead_End_Trap
+
+connection: Junction_East-Arrival_Vault

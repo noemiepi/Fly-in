@@ -1,0 +1,32 @@
+nb_drones: 100
+
+start_hub: start 0 0
+end_hub: end 6 6
+hub: way1 1 0 [zone=restricted max_drones=1]
+hub: way2 2 0 [zone=restricted max_drones=1]
+hub: way3 3 0 [zone=restricted max_drones=1]
+hub: rock1 1 1 [zone=blocked]
+hub: gobelin1 -1 -1 [zone=priority max_drones=20]
+hub: gobelin2 -2 -1 [zone=restricted max_drones=2]
+hub: gobelin3 -3 -1 [zone=restricted max_drones=2]
+hub: gobelin4 -4 -1 [zone=restricted max_drones=2]
+hub: gobelin5 -5 -1 [zone=restricted max_drones=2]
+hub: gobelin6 -6 -1 [zone=restricted max_drones=2]
+
+
+connection: start-way1
+connection: way1-way2
+connection: way2-way3
+connection: way3-end
+connection: start-rock1
+connection: rock1-end
+
+connection: start-gobelin1
+connection: gobelin1-gobelin2
+connection: gobelin2-gobelin3
+connection: gobelin3-gobelin4
+connection: gobelin4-gobelin5
+connection: gobelin5-gobelin6
+connection: gobelin6-end
+
+connection: way3-gobelin6

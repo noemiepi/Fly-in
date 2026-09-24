@@ -1,0 +1,33 @@
+nb_drones: 10
+
+start_hub: start 0 0
+hub: waypoint1 1 0 [color=lime max_drones=3]
+hub: quarantine 1 1 [color=blue max_drones=2 zone=restricted]
+hub: blocked 1 -1 [color=red max_drones=50 zone=blocked]
+
+hub: long_road1 1 -2 [color=salmon max_drones=1 zone=priority]
+hub: long_road2 2 -2 [color=salmon max_drones=1 zone=priority]
+hub: long_road3 3 -2 [color=salmon max_drones=1 zone=priority]
+hub: long_road4 4 -2 [color=salmon max_drones=1 zone=priority]
+hub: long_road5 5 0 [color=salmon max_drones=1 zone=priority]
+
+hub: impass 0 -1 [color=orange max_drones=1 zone=priority]
+hub: bridge 1 3 [color=red max_drones=10 zone=priority]
+hub: waypoint2 2 0 [color=blue]
+hub: isolated 4 3 [color=salmon zone=restricted]
+end_hub: goal 3 0 [color=red max_drones=5]
+
+connection: start-waypoint1
+connection: start-quarantine
+connection: start-blocked
+connection: blocked-goal
+connection: start-long_road1
+connection: waypoint1-waypoint2
+connection: quarantine-waypoint2
+connection: waypoint2-goal
+connection: start-impass
+connection: long_road1-long_road2
+connection: long_road2-long_road3
+connection: long_road3-long_road4
+connection: long_road4-long_road5
+connection: long_road5-goal

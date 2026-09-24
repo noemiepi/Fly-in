@@ -206,7 +206,10 @@ class MapParser():
                                 if meta_keyword == "color":
                                     if " " in meta_value or "-" in meta_value \
                                        or "_" in meta_value:
-                                        raise ValueError(f"Invalid color name "
+                                        raise ValueError(f"Invalid color name."
+                                                         " It shouldn't have: "
+                                                         "' ', '-' or '_' in "
+                                                         "the name "
                                                          f"({file}: l.{i})")
                                     color = meta_value
 
@@ -216,14 +219,17 @@ class MapParser():
 
                                     except ValueError:
                                         raise ValueError("Invalid drone "
-                                                         "number. It should "
-                                                         "be an integer "
+                                                         "number in the "
+                                                         "metadata. It "
+                                                         "should be an "
+                                                         "integer "
                                                          f"({file}: l.{i})")
 
                                     if nb_drone <= 0:
                                         raise ValueError("Invalid number of "
-                                                         "drones (Needs to be"
-                                                         " above 0) "
+                                                         "drones in the "
+                                                         "metadata (Needs to "
+                                                         "be above 0) "
                                                          f"({file}: l.{i})")
 
                         # Stocks the data in a dictionary
@@ -234,7 +240,7 @@ class MapParser():
                             nb_drone = 1
 
                         if color == "":
-                            color = None
+                            color = "black"
 
                         if key == "start_hub":
                             level_dict["start_hub"] = {
@@ -294,13 +300,16 @@ class MapParser():
 
                                     except ValueError:
                                         raise ValueError("Invalid drone "
-                                                         "number. It should "
-                                                         "be an integer "
+                                                         "number in the "
+                                                         "metadata. It "
+                                                         "should be an "
+                                                         "integer "
                                                          f"({file}: l.{i})")
 
                                     if nb_drone <= 0:
                                         raise ValueError("Invalid number of "
-                                                         "drones (Needs to "
+                                                         "drones in the "
+                                                         "metadata (Needs to "
                                                          "be above 0) "
                                                          f"({file}: l.{i})")
 

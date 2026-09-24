@@ -1,0 +1,43 @@
+nb_drones: 100
+
+start_hub: cargo 0 0 [color=green max_drones=20]
+end_hub: warehouse 10 -3 [color=gray max_drones=20]
+
+hub: house1 1 0 [color=orange max_drones=10 zone=normal]
+hub: house2 2 0 [color=orange max_drones=10 zone=normal]
+hub: house3 3 0 [color=orange max_drones=10 zone=normal]
+hub: house4 5 0 [color=orange max_drones=20 zone=normal]
+hub: house5 6 0 [color=orange max_drones=10 zone=normal]
+hub: house6 8 0 [color=orange max_drones=10 zone=normal]
+hub: house7 9 0 [color=orange max_drones=10 zone=normal]
+
+hub: restricted_area1 4 0 [color=red max_drones=5 zone=blocked]
+hub: restricted_area2 5 4 [color=red max_drones=5 zone=blocked]
+
+hub: priority_market1 3 2 [color=blue max_drones=7 zone=priority]
+hub: priority_market2 10 -1 [color=blue max_drones=15 zone=priority]
+
+hub: charging_station1 7 -1 [color=yellow max_drones=1 zone=restricted]
+hub: charging_station2 1 -3 [color=yellow max_drones=2 zone=restricted]
+hub: charging_station3 5 3 [color=yellow max_drones=10 zone=restricted]
+hub: charging_station4 10 -2 [color=yellow max_drones=10 zone=restricted]
+
+connection: cargo-house1 [max_link_capacity=10]
+connection: cargo-priority_market1 [max_link_capacity=10]
+connection: cargo-charging_station2 [max_link_capacity=10]
+connection: house1-house2 [max_link_capacity=5]
+connection: house2-house3 [max_link_capacity=5]
+connection: house3-priority_market1 [max_link_capacity=5]
+connection: priority_market1-house4 [max_link_capacity=10]
+connection: house4-house5 [max_link_capacity=10]
+connection: house5-charging_station1 [max_link_capacity=10]
+connection: house5-charging_station3 [max_link_capacity=10]
+connection: charging_station1-house6 [max_link_capacity=10]
+connection: charging_station3-house6 [max_link_capacity=10]
+connection: house6-house7 [max_link_capacity=10]
+connection: house7-priority_market2 [max_link_capacity=10]
+connection: priority_market2-charging_station4 [max_link_capacity=10]
+connection: charging_station4-warehouse [max_link_capacity=10]
+connection: charging_station2-house3 [max_link_capacity=10]
+connection: house3-charging_station1 [max_link_capacity=3]
+connection: charging_station1-charging_station4 [max_link_capacity=3]
