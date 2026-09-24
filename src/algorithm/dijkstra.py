@@ -18,7 +18,6 @@ class Algorithm():
     - find_next_step(self, predecessors: dict[str, Any],
                      distances: dict[str, float]) -> list[str]
     """
-
     def __init__(self, zones: dict[str, Zone]) -> None:
         self.zones = zones
         self.zone_weight: dict[str, float] = {}

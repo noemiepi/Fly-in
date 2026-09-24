@@ -23,7 +23,6 @@ class UserMenu():
       - hardcore_maps(self) -> dict[str, Any]
       - creative_maps(self) -> dict[str, Any]
     """
-
     def __init__(self, maps_dict: dict[str, dict[str, Any]]) -> None:
         map_parse: MapParser = MapParser()
 

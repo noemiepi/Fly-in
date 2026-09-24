@@ -43,6 +43,7 @@ Two flags were added in this project:
 | `-o` or `--output` | Writes the terminal output in a file located at the root of the repository |
 
 ## Usage Example
+### Input Example
 Files containing the maps' data are given in this format:
 ```txt
 nb_drones: 5
@@ -80,6 +81,7 @@ For the different hubs (start, end and regulars), the metadata can be:
 For the connections, the metadata consists of:
   - `max_link_capacity=<number>` (default: **1**) it's the maximum number of drones that can traverse this connection simultaneously</br>
 
+### Output Example
 For this project, two outputs were made, one of them being mandatory.</br>
 For the mandatory visual, here is the template shown below:
 ```bash
@@ -137,6 +139,7 @@ Below is a schema to give a visual representation of the algorithm:
 
   <i>The nodes are marked in red once the algorithm has visited each neighbour of the node.</i>
 </div>
+The algorithm complexity is: O(|E| + |V|log|V|)
 
 ## Implementation Strategy
 This project is Object Oriented, meaning classes were used for a majority of aspects in the program.</br>
@@ -168,6 +171,7 @@ The visual here will help have a better way to visualize the drones' movements.
 - [Different Path Finding Algorithms](https://graphable.ai/blog/pathfinding-algorithms/)
 
 #### Dijkstra Algorithm
+- [Informations](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
 - [Mathematical Approach](https://www.maths-cours.fr/methode/algorithme-de-dijkstra-etape-par-etape/)
 
 - [Key Concepts And Implementation](https://major-prepa.com/python/algorithme-dijkstra/)

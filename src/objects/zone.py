@@ -5,17 +5,14 @@ class Zone():
     """
     This class will create a zone object.
     """
-
-    def __init__(
-        self,
-        name: str,
-        coords: tuple[int, int],
-        metadata: dict[str, Any],
-        connections: dict[str, Any],
-    ) -> None:
+    def __init__(self, name: str, coords: tuple[int, int],
+                 metadata: dict[str, Any],
+                 connections: dict[str, Any]) -> None:
         self.name = name
+        self.connections = connections
 
         self.neighbours: list[str] = []
+        self.drones_present: dict[str, int] = {}
 
         self.coords = coords
         self.x: int = 0
@@ -36,26 +33,24 @@ class Zone():
             if key == "color":
                 self.color = value
 
-        for connection, values in connections.items():
+        for connection, values in self.connections.items():
             for key, value in values.items():
                 if key == "path":
                     if name in value:
+                        self.drones_present[value] = 0
                         steps: list[str] = value.split("-")
+
                         if steps[0] == name:
-                            if (
-                                steps[1] == "goal"
-                                or steps[1] == "impossible_goal"
-                            ):
+                            if steps[1] == "goal" \
+                               or steps[1] == "impossible_goal":
                                 self.neighbours.append("end")
 
                             else:
                                 self.neighbours.append(steps[1])
 
                         if steps[1] == name:
-                            if (
-                                steps[0] == "goal"
-                                or steps[0] == "impossible_goal"
-                            ):
+                            if steps[0] == "goal" \
+                               or steps[0] == "impossible_goal":
                                 self.neighbours.append("end")
 
                             else:

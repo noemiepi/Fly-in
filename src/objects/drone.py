@@ -10,7 +10,6 @@ class Drone():
       - next_position(self, zone: Zone) -> None
       - move_to(self, zone: str) -> None
     """
-
     def __init__(self, id: int) -> None:
         self.id = f"D{id}"
 

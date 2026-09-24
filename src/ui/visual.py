@@ -44,18 +44,9 @@ class Visualizer(arcade.Window):
       - _build_connections(self) -> None
       - _load_sprites(self) -> None
     """
-
     def __init__(self, lvl_name: str, monitor: Monitor) -> None:
-        super().__init__(
-            width=WINDOW_WIDTH,
-            height=WINDOW_HEIGHT,
-            title=TITLE,
-            resizable=True,
-            center_window=True,
-        )
-
-        self.background_color = arcade.color.BLUE_BELL
-
+        super().__init__(width=WINDOW_WIDTH, height=WINDOW_HEIGHT,
+                         title=TITLE, resizable=True, center_window=True)
         self.lvl_name = lvl_name
         self.monitor = monitor
 

@@ -2,8 +2,8 @@ import copy
 
 from typing import Any
 
-from src.objects.drone import Drone
 from src.objects.zone import Zone
+from src.objects.drone import Drone
 from src.algorithm.dijkstra import Algorithm
 
 end = "\033[0m"
@@ -33,7 +33,6 @@ class Monitor():
       - _create_drones(self) -> None
       - _create_zones(self) -> None
     """
-
     def __init__(self, data: dict[str, Any], output: bool) -> None:
         self.level = data
         self.output = output
@@ -141,7 +140,7 @@ class Monitor():
 
     def _plan_routes(self) -> None:
         """
-        Looks at the differents routes possibilities and chooses
+        Looks at the different route possibilities and chooses
         the quickest one depending on the zones and link capacity.
         """
         algo: Algorithm = Algorithm(self.zones)
@@ -165,9 +164,8 @@ class Monitor():
 
         self._give_routes(algo, routes[:best_nb])
 
-    def _give_routes(
-        self, algo: Algorithm, routes: list[dict[str, str]]
-    ) -> None:
+    def _give_routes(self, algo: Algorithm,
+                     routes: list[dict[str, str]]) -> None:
         """
         Gives a route for each drone.
 
@@ -328,9 +326,8 @@ class Monitor():
                 self.zone_limit[current_name] -= 1
 
             if next_name != "end":
-                self.zone_limit[next_name] = (
-                    self.zone_limit.get(next_name, 0) + 1
-                )
+                self.zone_limit[next_name] = (self.zone_limit.get(next_name, 0)
+                                              + 1)
 
             drone_obj.move_to(next_name)
 
@@ -339,6 +336,9 @@ class Monitor():
                 drone_obj.transit = (current_name, next_name)
                 current = self.zones[current_name].name
                 moves.append(f"{drone_obj.id}-{current}-{next_zone.name}")
+                for con, drones in next_zone.drones_present.items():
+                    if current_name in con:
+                        next_zone.drones_present[con] = 1
 
             else:
                 moves.append(f"{drone_obj.id}-{next_zone.name}")
