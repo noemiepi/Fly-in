@@ -1,0 +1,18 @@
+# ------------------- #
+#     Cache Files     #
+# ------------------- #
+__pycache__/
+.mypy_cache
+poetry.lock
+uv.lock
+.ruff_cache/
+
+# ------------------- #
+# Virtual Environment #
+# ------------------- #
+.venv/
+
+# ------------------- #
+#        Other        #
+# ------------------- #
+sim_output.txt
