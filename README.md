@@ -186,3 +186,6 @@ The visual here will help have a better way to visualize the drones' movements.
 
 ### GitHub
 - [Overtekk](https://github.com/Overtekk/Fly-in)
+
+### AI usage
+AI was used to debug the code and help with the proportion in the arcade visual
