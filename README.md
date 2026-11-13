@@ -1,8 +1,21 @@
 <div align="center">
-    <i>This project has been created as part of the 42 curriculum by npillet</i>
     <h1>Fly-in</h1>
     <h3>Drones are interesting.</h3>
+    <i>This project has been created as part of the 42 curriculum by npillet</i>
 </div>
+
+## Table of Contents
+- [Description](#description)
+- [Instructions](#instructions)
+- [Usage Example](#usage-example)
+  - [Input Example](#input-example)
+  - [Output Example](#output-example)
+- [Algorithm Explanation](#algorithm-explanation)
+  - [Algorithm Choice](#algorithm-choice)
+  - [How does it work?](#how-does-it-work)
+- [Implementation Strategy](#implementation-strategy)
+- [Visualization](#visualization)
+- [Resources](#resources)
 
 ## Description
 The goal of this project is to design a system that efficiently routes a fleet of drones from a starting point to an end point, all while following the different types of zones.</br>
@@ -189,3 +202,11 @@ The visual here will help have a better way to visualize the drones' movements.
 
 ### AI usage
 AI was used to debug the code and help with the proportion in the arcade visual
+
+<br>
+<hr>
+<br>
+
+<div align="center">
+    <img src="assets/README/footer.png" />
+</div>
